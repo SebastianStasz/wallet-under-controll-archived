@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="18154" systemVersion="20E232" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CurrencyEntity" representedClassName="CurrencyEntity" syncable="YES">
+        <attribute name="code" attributeType="String"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="updateDate" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="wallets" toMany="YES" deletionRule="Nullify" destinationEntity="WalletEntity" inverseName="currency" inverseEntity="WalletEntity"/>
+    </entity>
+    <entity name="WalletEntity" representedClassName="WalletEntity" syncable="YES">
+        <attribute name="creationDate" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="icon_" attributeType="Integer 16" usesScalarValueType="YES"/>
+        <attribute name="iconColor_" attributeType="Integer 16" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="initialBalance" attributeType="Double" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <relationship name="currency" maxCount="1" deletionRule="Nullify" destinationEntity="CurrencyEntity" inverseName="wallets" inverseEntity="CurrencyEntity"/>
+        <relationship name="type" maxCount="1" deletionRule="Nullify" destinationEntity="WalletTypeEntity" inverseName="wallets" inverseEntity="WalletTypeEntity"/>
+    </entity>
+    <entity name="WalletTypeEntity" representedClassName="WalletTypeEntity" syncable="YES">
+        <attribute name="name" attributeType="String"/>
+        <relationship name="wallets" toMany="YES" deletionRule="Nullify" destinationEntity="WalletEntity" inverseName="type" inverseEntity="WalletEntity"/>
+    </entity>
+    <elements>
+        <element name="CurrencyEntity" positionX="-233.279296875" positionY="0.6588134765625" width="128" height="103"/>
+        <element name="WalletEntity" positionX="-60.75616455078125" positionY="18.45382690429688" width="128" height="163"/>
+        <element name="WalletTypeEntity" positionX="92.91082763671875" positionY="27.7108154296875" width="128" height="73"/>
+    </elements>
+</model>

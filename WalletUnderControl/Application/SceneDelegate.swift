@@ -10,13 +10,37 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
    var window: UIWindow?
-
+   static let context = PersistenceController.preview.context
 
    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-      // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-      // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-      // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-      guard let _ = (scene as? UIWindowScene) else { return }
+      guard let winScene = (scene as? UIWindowScene) else { return }
+      
+      let walletManager = WalletManager()
+      let walletListVC = WalletListVC(walletsManager: walletManager)
+      
+      let currencies = Currencies()
+      let currencyListVC = CurrencyListVC(currencies: currencies)
+      
+      let walletListNC = UINavigationController(rootViewController: walletListVC)
+      let currencyListNC = UINavigationController(rootViewController: currencyListVC)
+      
+      let settingsVC = SettingsVC()
+      let settingsNC = UINavigationController(rootViewController: settingsVC)
+
+      let tabBarVC = UITabBarController()
+      tabBarVC.setViewControllers([walletListNC, currencyListNC, settingsNC], animated: false)
+      
+      let tabBarItems = tabBarVC.tabBar.items!
+      tabBarItems[0].image = UIImage(systemName: "creditcard.fill")
+      tabBarItems[0].title = "Wallets"
+      tabBarItems[1].image = UIImage(systemName: "dollarsign.circle")
+      tabBarItems[1].title = "Currencies"
+      tabBarItems[2].image = UIImage(systemName: "gearshape.fill")
+      tabBarItems[2].title = "Settings"
+      
+      window = UIWindow(windowScene: winScene)
+      window!.rootViewController = tabBarVC
+      window!.makeKeyAndVisible()
    }
 
    func sceneDidDisconnect(_ scene: UIScene) {
