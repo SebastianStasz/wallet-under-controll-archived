@@ -9,11 +9,11 @@ import CoreData
 import UIKit
 
 class WalletListVC: UIViewController {
-   private let walletsManager: WalletService
+   private let wallets: FetchedResultsController<WalletEntity>
    private let walletsTBV = UITableView()
    
-   init(walletsManager: WalletService = WalletManager.shared) {
-      self.walletsManager = walletsManager
+   init(walletsManager: FetchedResultsController<WalletEntity> = WalletEntity.fetchedResultsController) {
+      self.wallets = walletsManager
       super.init(nibName: nil, bundle: nil)
       
       walletsTBV.delegate = self
@@ -49,7 +49,7 @@ class WalletListVC: UIViewController {
 extension WalletListVC {
    
    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-      let wallet = walletsManager.fetchedResultsController.object(at: indexPath)
+      let wallet = wallets.fetchedResultsController.object(at: indexPath) as! WalletEntity
       
       let config = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
          let deleteBTN = UIAction.deleteAction { [unowned self] in showDeletingAlertForWallet(wallet) }
@@ -65,7 +65,7 @@ extension WalletListVC {
       let message = "All data will be deleted!"
       
       let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
-      ac.addAction(UIAlertAction.deleteAction { [unowned self] in walletsManager.delete(wallet) })
+      ac.addAction(UIAlertAction.deleteAction { [unowned self] in wallets.delete(wallet) })
       ac.addAction(UIAlertAction.cancelAction)
       
       present(ac, animated: true)
@@ -81,17 +81,17 @@ extension WalletListVC {
 extension WalletListVC: UITableViewDelegate, UITableViewDataSource {
    
    func numberOfSections(in tableView: UITableView) -> Int {
-      walletsManager.fetchedResultsController.sections?.count ?? 0
+      wallets.fetchedResultsController.sections?.count ?? 0
    }
    
    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      let sectionInfo = walletsManager.fetchedResultsController.sections![section]
+      let sectionInfo = wallets.fetchedResultsController.sections![section]
       return sectionInfo.numberOfObjects
    }
    
    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
       let cell = tableView.dequeueReusableCell(withIdentifier: WalletCell.id) as! WalletCell
-      let wallet = walletsManager.fetchedResultsController.object(at: indexPath)
+      let wallet = wallets.fetchedResultsController.object(at: indexPath) as! WalletEntity
       cell.configure(wallet: wallet)
       
       return cell

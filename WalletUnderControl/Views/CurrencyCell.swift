@@ -9,7 +9,7 @@ import UIKit
 
 class CurrencyCell: UITableViewCell {
    static let id = "CurrencyCell"
-   static let height: CGFloat = 40
+   static let height: CGFloat = 45
    
    private var cellHorizontalStack: UIStackView!
    

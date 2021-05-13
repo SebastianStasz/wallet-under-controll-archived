@@ -9,7 +9,7 @@ import UIKit
 
 class SettingsCell: UITableViewCell {
    static let id = "SettingsCell"
-   static let height: CGFloat = 40
+   static let height: CGFloat = 45
    
    private var cellHorizontalStack: UIStackView!
    

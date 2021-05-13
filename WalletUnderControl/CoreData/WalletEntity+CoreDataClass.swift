@@ -24,9 +24,15 @@ public class WalletEntity: NSManagedObject {
    
 }
 
+extension WalletEntity: CoreDataEntity {
+   static let name = "WalletEntity"
+}
+
 // MARK: -- Methods
 
 extension WalletEntity {
+   
+   static let fetchedResultsController = FetchedResultsController<WalletEntity>()
    
    static func create(in context: NSManagedObjectContext, using template: WalletTemplate) {
       let wallet = WalletEntity(context: context)

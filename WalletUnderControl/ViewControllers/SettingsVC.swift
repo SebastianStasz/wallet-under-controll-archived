@@ -23,7 +23,7 @@ class SettingsVC: UIViewController {
       
       sections = [
          .init(title: "Categories", options: [
-            .init(title: "Wallet Types", handler: { print("Wallet Types") })
+            .init(title: "Wallet Types", handler: { [unowned self] in presentVC(WalletTypeListVC()) })
          ]),
          .init(title: "Currencies", options: [
             

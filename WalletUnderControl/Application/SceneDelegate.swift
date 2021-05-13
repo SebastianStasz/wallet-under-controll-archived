@@ -15,8 +15,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
       guard let winScene = (scene as? UIWindowScene) else { return }
       
-      let walletManager = WalletManager()
-      let walletListVC = WalletListVC(walletsManager: walletManager)
+      let walletListVC = WalletListVC()
       
       let currencies = Currencies()
       let currencyListVC = CurrencyListVC(currencies: currencies)
