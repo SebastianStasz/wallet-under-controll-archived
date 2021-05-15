@@ -7,6 +7,8 @@
 
 import Foundation
 
+extension WalletIcon: CaseIterable {}
+
 public enum WalletIcon: Int16 {
    case bag
    case bagFill

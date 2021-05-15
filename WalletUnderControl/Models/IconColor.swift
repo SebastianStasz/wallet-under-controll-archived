@@ -7,6 +7,8 @@
 
 import UIKit
 
+extension IconColor: CaseIterable {}
+
 enum IconColor: Int16 {
    case red
    case orange

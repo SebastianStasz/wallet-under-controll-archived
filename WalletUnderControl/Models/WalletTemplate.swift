@@ -15,3 +15,14 @@ struct WalletTemplate {
    let initialBalance: Double
    let currency: CurrencyEntity
 }
+
+extension WalletTemplate {
+   
+   init?(using walletForm: WalletFormVC.Form) {
+      guard let type = walletForm.walletType, let balance = walletForm.initialBalance, let currency = walletForm.currency else {
+         return nil
+      }
+      self.init(name: walletForm.name, icon: walletForm.icon, iconColor: walletForm.iconColor, type: type, initialBalance: balance, currency: currency)
+   }
+   
+}

@@ -9,6 +9,8 @@ import UIKit
 
 extension UIButton {
    
+   // MARK: -- Main Animation when Clicked
+   
    func zoomIn(duration: TimeInterval = 0.2) {
       transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
       
@@ -16,4 +18,12 @@ extension UIButton {
          transform = .identity
       }) { (animationCompleted: Bool) -> Void in }
    }
+}
+
+// MARK: -- Button opacity if disabled / enabled
+
+class MainButton: UIButton {
+    override var isEnabled: Bool {
+        didSet { alpha = isEnabled ? 1.0 : 0.5 }
+    }
 }

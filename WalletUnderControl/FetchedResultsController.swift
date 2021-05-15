@@ -23,7 +23,7 @@ class FetchedResultsController<T>: NSObject, NSFetchedResultsControllerDelegate 
    
    init(context: NSManagedObjectContext = SceneDelegate.context) {
       self.context = context
-   
+      print("Creating FetchedResultsController for \(T.Type.self)")
       let request = NSFetchRequest<T>(entityName: T.name) as! NSFetchRequest<NSManagedObject>
       request.sortDescriptors = []
       request.predicate = nil

@@ -41,5 +41,5 @@ extension CurrencyEntity {
 }
 
 extension CurrencyEntity : Identifiable {
-
+//   public var id: String { code }
 }

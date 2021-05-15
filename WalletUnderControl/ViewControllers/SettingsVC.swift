@@ -105,8 +105,8 @@ extension SettingsVC: UITableViewDelegate, UITableViewDataSource {
 
 // MARK: -- Intents
 
-extension SettingsVC {
+extension UIViewController {
    func presentVC(_ viewController: UIViewController) {
-      navigationController?.pushViewController(viewController, animated: true)
+      self.navigationController?.pushViewController(viewController, animated: true)
    }
 }

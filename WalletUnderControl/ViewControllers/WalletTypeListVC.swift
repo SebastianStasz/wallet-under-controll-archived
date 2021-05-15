@@ -9,6 +9,7 @@ import CoreData
 import UIKit
 
 class WalletTypeListVC: UIViewController {
+   private let picker: Picker?
    private let walletTypes: FetchedResultsController<WalletTypeEntity>
    private let context: NSManagedObjectContext
    private var walletTypeAlert: WalletTypeAlert? = nil
@@ -16,20 +17,25 @@ class WalletTypeListVC: UIViewController {
    private let walletTypeListView = WalletTypeListView()
    private var walletTypesTBV: UITableView { walletTypeListView.walletTypesTBV }
    
-   init(walletTypes: FetchedResultsController<WalletTypeEntity> = WalletTypeEntity.fetchedResultsController, context: NSManagedObjectContext = SceneDelegate.context) {
-      self.walletTypes = walletTypes
+   /// Without specifing, fetched results controller will be created in given context.
+   init(picker: Picker? = nil,
+        walletTypes: FetchedResultsController<WalletTypeEntity>? = nil,
+        context: NSManagedObjectContext = SceneDelegate.context)
+   {
+      self.walletTypes = walletTypes ?? WalletTypeEntity.fetchedResultsController(in: context)
       self.context = context
+      self.picker = picker
       super.init(nibName: nil, bundle: nil)
-      
-      walletTypesTBV.delegate = self
-      walletTypesTBV.dataSource = self
-      walletTypes.fetchedResultsController.delegate = self
    }
    
    override func viewDidLoad() {
       super.viewDidLoad()
       
-      title = "Wallet Types"
+      walletTypesTBV.delegate = self
+      walletTypesTBV.dataSource = self
+      walletTypes.fetchedResultsController.delegate = self
+      
+      title = picker == nil ? "Wallet Types" : "Select Type"
       navigationController?.navigationBar.prefersLargeTitles = true
 
       walletTypeListView.addTypeBTN.addTarget(self, action: #selector(showCreatingWalletTypeAlert), for: .touchUpInside)
@@ -113,12 +119,17 @@ extension WalletTypeListVC: UITableViewDelegate, UITableViewDataSource {
    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
       let cell = tableView.dequeueReusableCell(withIdentifier: WalletTypeCell.id) as! WalletTypeCell
       let walletType = walletTypes.fetchedResultsController.object(at: indexPath) as! WalletTypeEntity
-      cell.configure(with: walletType)
+      cell.configure(with: walletType, isSelected: picker?.selectedType == walletType)
       
       return cell
    }
    
    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+      if let picker = picker {
+         let walletType = walletTypes.fetchedResultsController.object(at: indexPath) as! WalletTypeEntity
+         picker.selectRowHandler(walletType)
+         navigationController?.popViewController(animated: true)
+      }
       tableView.deselectRow(at: indexPath, animated: true)
    }
 }
@@ -138,6 +149,20 @@ extension WalletTypeListVC: NSFetchedResultsControllerDelegate {
       case .update:
          walletTypesTBV.reloadData()
       default: break
+      }
+   }
+}
+
+extension WalletTypeListVC {
+   struct Picker {
+      let title: String?
+      let selectedType: WalletTypeEntity?
+      let selectRowHandler: (_ currency: WalletTypeEntity) -> Void
+      
+      init(title: String? = nil, selectedType: WalletTypeEntity?, selectRowHandler: @escaping (_ walletType: WalletTypeEntity) -> Void) {
+         self.title = title
+         self.selectedType = selectedType
+         self.selectRowHandler = selectRowHandler
       }
    }
 }

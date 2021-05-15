@@ -21,7 +21,11 @@ extension WalletTypeEntity: CoreDataEntity {
 // MARK: -- Methods
 
 extension WalletTypeEntity {
-   static let fetchedResultsController = FetchedResultsController<WalletTypeEntity>()
+
+   static func fetchedResultsController(in context: NSManagedObjectContext = SceneDelegate.context) -> FetchedResultsController<WalletTypeEntity> {
+      let walletTypes = FetchedResultsController<WalletTypeEntity>(context: context)
+      return walletTypes
+   }
    
    static func create(in context: NSManagedObjectContext, name: String) {
       let walletType = WalletTypeEntity(context: context)

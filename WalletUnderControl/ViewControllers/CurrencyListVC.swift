@@ -76,12 +76,96 @@ extension CurrencyListVC: UITableViewDelegate, UITableViewDataSource {
 extension CurrencyListVC {
    struct Picker {
       let title: String?
-      let selectedCurrency: String
+      let selectedCurrency: String?
       let selectRowHandler: (_ currency: CurrencyEntity) -> Void
       
-      init(title: String? = nil, selectedCurrency: String, selectRowHandler: @escaping (_ currency: CurrencyEntity) -> Void) {
+      init(title: String? = nil, selectedCurrency: String?, selectRowHandler: @escaping (_ currency: CurrencyEntity) -> Void) {
          self.title = title
          self.selectedCurrency = selectedCurrency
+         self.selectRowHandler = selectRowHandler
+      }
+   }
+}
+
+
+
+class ListPickerVC<T: Identifiable>: UIViewController, UITableViewDelegate, UITableViewDataSource {
+   private var cancellables: Set<AnyCancellable> = []
+   private let picker: Picker
+   private let items: [T]
+   
+   private let pickerTableView = UITableView()
+   
+   init(picker: Picker, items: [T]) {
+      self.picker = picker
+      self.items = items
+      super.init(nibName: nil, bundle: nil)
+      
+      pickerTableView.delegate = self
+      pickerTableView.dataSource = self
+   }
+   
+   override func viewDidLoad() {
+      super.viewDidLoad()
+      
+      pickerTableView.rowHeight = CurrencyCell.height
+      
+      if T.self == WalletTypeEntity.self {
+         
+      }
+      
+      view = pickerTableView
+      title = picker.title
+   }
+   
+   required init?(coder: NSCoder) {
+      fatalError("init(coder:) has not been implemented")
+   }
+   
+   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+      items.count
+   }
+   
+   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+      if T.self == CurrencyEntity.self {
+         pickerTableView.register(CurrencyCell.self, forCellReuseIdentifier: CurrencyCell.id)
+         let cell = tableView.dequeueReusableCell(withIdentifier: CurrencyCell.id) as! CurrencyCell
+         let item = items[indexPath.row] as! CurrencyEntity
+         let selectedItem = picker.selectedItem as? CurrencyEntity
+         let isSelected = selectedItem?.code == item.code
+         cell.configure(with: item, isSelected: isSelected)
+         return cell
+      } else {
+         pickerTableView.register(WalletTypeCell.self, forCellReuseIdentifier: WalletTypeCell.id)
+         let cell = tableView.dequeueReusableCell(withIdentifier: WalletTypeCell.id) as! WalletTypeCell
+         let item = items[indexPath.row] as! WalletTypeEntity
+         let selectedItem = picker.selectedItem as? WalletTypeEntity
+         let isSelected = selectedItem?.id == item.id
+         cell.configure(with: item, isSelected: isSelected)
+         return cell
+      }
+   }
+   
+   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+      tableView.deselectRow(at: indexPath, animated: true)
+      let item = items[indexPath.row]
+      
+      picker.selectRowHandler(item)
+      navigationController?.popViewController(animated: true)
+   }
+}
+
+// MARK: -- Picker Functionality
+
+extension ListPickerVC {
+   struct Picker {
+      let title: String?
+      let selectedItem: T?
+      let selectRowHandler: (_ item: T) -> Void
+      
+      init(title: String? = nil, selectedItem: T?, selectRowHandler: @escaping (_ item: T) -> Void) {
+         self.title = title
+         self.selectedItem = selectedItem
          self.selectRowHandler = selectRowHandler
       }
    }

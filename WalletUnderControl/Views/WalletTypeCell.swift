@@ -13,8 +13,9 @@ class WalletTypeCell: UITableViewCell {
    
    private let nameLabel = UILabel()
    
-   func configure(with walletType: WalletTypeEntity) {
+   func configure(with walletType: WalletTypeEntity, isSelected: Bool = false) {
       nameLabel.text = walletType.name
+      if isSelected { accessoryType = .checkmark }
    }
    
    private func setupViews() {

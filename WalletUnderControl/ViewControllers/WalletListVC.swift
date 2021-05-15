@@ -12,18 +12,18 @@ class WalletListVC: UIViewController {
    private let wallets: FetchedResultsController<WalletEntity>
    private let walletsTBV = UITableView()
    
-   init(walletsManager: FetchedResultsController<WalletEntity> = WalletEntity.fetchedResultsController) {
-      self.wallets = walletsManager
+   init(wallets: FetchedResultsController<WalletEntity> = WalletEntity.fetchedResultsController()) {
+      self.wallets = wallets
       super.init(nibName: nil, bundle: nil)
-      
-      walletsTBV.delegate = self
-      walletsTBV.dataSource = self
-      walletsManager.fetchedResultsController.delegate = self
    }
    
    override func viewDidLoad() {
       super.viewDidLoad()
 
+      walletsTBV.delegate = self
+      walletsTBV.dataSource = self
+      wallets.fetchedResultsController.delegate = self
+      
       walletsTBV.rowHeight = WalletCell.height
       walletsTBV.register(WalletCell.self, forCellReuseIdentifier: WalletCell.id)
 
@@ -53,7 +53,7 @@ extension WalletListVC {
       
       let config = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
          let deleteBTN = UIAction.deleteAction { [unowned self] in showDeletingAlertForWallet(wallet) }
-         let editBTN = UIAction.editAction { [unowned self] in showCreatingWalletSheet() }
+         let editBTN = UIAction.editAction { [unowned self] in showActionWalletSheet(for: wallet) }
          return UIMenu(title: wallet.name, children: [editBTN, deleteBTN])
       }
       
@@ -72,7 +72,13 @@ extension WalletListVC {
    }
    
    @objc private func showCreatingWalletSheet() {
-      
+      showActionWalletSheet(for: nil)
+   }
+   
+   private func showActionWalletSheet(for wallet: WalletEntity?) {
+      let walletFormVC = WalletFormVC(wallet: wallet, wallets: wallets)
+      let walletFormNC = UINavigationController(rootViewController: walletFormVC)
+      present(walletFormNC, animated: true)
    }
 }
 
@@ -110,6 +116,12 @@ extension WalletListVC: NSFetchedResultsControllerDelegate {
       
       switch type {
       case .delete: walletsTBV.deleteRows(at: [indexPath!], with: .left)
+      case .update:
+         let indexPath = controller.indexPath(forObject: anObject as! NSManagedObject)
+         walletsTBV.reloadRows(at: [indexPath!], with: .automatic)
+      case .insert:
+         let indexPath = controller.indexPath(forObject: anObject as! NSManagedObject)
+         walletsTBV.insertRows(at: [indexPath!], with: .automatic)
       default: break
       }
    }

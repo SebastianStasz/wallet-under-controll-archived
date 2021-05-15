@@ -10,12 +10,15 @@ import XCTest
 
 class WalletTypeAlertTests: XCTestCase {
    
-   private let context = PersistenceController.empty.context
    private var textFieldDebounce: XCTestExpectation!
+   
+   private let context = PersistenceController.empty.context
+   private var validationManager: ValidationManagerMock!
    private var walletTypeAlert: WalletTypeAlert!
    
    override func setUpWithError() throws {
       textFieldDebounce = XCTestExpectation(description: "Debounce for text field.")
+      validationManager = nil
       walletTypeAlert = nil
       context.reset()
    }
@@ -48,71 +51,16 @@ class WalletTypeAlertTests: XCTestCase {
       XCTAssertTrue(cancelBTN.isEnabled, "Cancel action should be enabled.")
    }
    
-   func test_valid_values() throws {
-      let values = ["Test", "   Savings", "Some Value  ", "ALA LA1 23---"]
-      let usedNames = ["Test2", "TesT", "SomeValue", "Savingss"]
-      for value in values {
-         try test_enter_valid_text(for: value, usedNames: usedNames)
-         textFieldDebounce = XCTestExpectation(description: "Debounce for text field.")
-      }
-   }
-   
-   func test_too_short_values() throws {
-      let values = ["a", "aa", " a", " aa  ", "aa   ", "a a ", " a a "]
-      for value in values {
-         try test_enter_too_short_text(for: value)
-         textFieldDebounce = XCTestExpectation(description: "Debounce for text field.")
-      }
-   }
-   
-   func test_too_long_values() throws {
-      let values = ["1234567890asdfg", "1234567890asdfg  ", " 1234567890asdfg"]
-      for value in values {
-         try test_enter_too_long_text(for: value)
-         textFieldDebounce = XCTestExpectation(description: "Debounce for text field.")
-      }
-   }
-   
-   func test_enter_empty_text() throws {
+   func test_enter_value_to_text_field() throws {
       walletTypeAlert = WalletTypeAlert(editing: nil, context: context, usedNames: [])
-      enterToTextField("Test")
-      enterToTextField("")
-      
-      XCTAssertTrue(nameTextFieldText.isEmpty, "Name text field should be empty.")
-      
-      DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [unowned self] in
-         XCTAssertEqual(alertMessage, WalletTypeAlert.NameValidation.isEmpty.message)
-         XCTAssertFalse(actionBTN.isEnabled, "Add action should be disabled.")
-         XCTAssertTrue(cancelBTN.isEnabled, "Cancel action should be enabled.")
-         textFieldDebounce.fulfill()
-      }
-      
-      wait(for: [textFieldDebounce], timeout: 2)
+      enterToTextField("Sample Name")
+      XCTAssertEqual(nameTextFieldText, "Sample Name", "Text field should contain text: 'Sample Name'.")
    }
    
-   func test_enter_not_unique_text() throws {
-      walletTypeAlert = WalletTypeAlert(editing: nil, context: context, usedNames: ["Test Name"])
-      enterToTextField("Test Name")
-      
-      XCTAssertEqual(nameTextFieldText, "Test Name", "Name text field should containt text 'Test Name'.")
-   
-      DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [unowned self] in
-         XCTAssertEqual(alertMessage, WalletTypeAlert.NameValidation.notUnique.message)
-         XCTAssertFalse(actionBTN.isEnabled, "Add action should be disabled.")
-         XCTAssertTrue(cancelBTN.isEnabled, "Cancel action should be enabled.")
-         textFieldDebounce.fulfill()
-      }
-      
-      wait(for: [textFieldDebounce], timeout: 2)
-   }
-   
-   // MARK: -- Helper Functions
-   
-   func test_enter_valid_text(for text: String, usedNames: [String]) throws {
-      walletTypeAlert = WalletTypeAlert(editing: nil, context: context, usedNames: usedNames)
-      enterToTextField(text)
-      
-      XCTAssertEqual(nameTextFieldText, text, "Name text field should containt text '\(text)'.")
+   func test_enter_valid_text() throws {
+      validationManager = ValidationManagerMock(nameValidationResult: .isValid)
+      walletTypeAlert = WalletTypeAlert(editing: nil, validationManager: validationManager, context: context, usedNames: [])
+      enterToTextField("User entered value")
       
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [unowned self] in
          XCTAssertEqual(alertMessage, nil, "Message should be nil.")
@@ -124,14 +72,13 @@ class WalletTypeAlertTests: XCTestCase {
       wait(for: [textFieldDebounce], timeout: 2)
    }
    
-   func test_enter_too_short_text(for text: String) throws {
-      walletTypeAlert = WalletTypeAlert(editing: nil, context: context, usedNames: [])
-      enterToTextField(text)
-      
-      XCTAssertEqual(nameTextFieldText, text, "Name text field should containt text '\(text)'.")
+   func test_enter_too_short_text() throws {
+      validationManager = ValidationManagerMock(nameValidationResult: .tooShort)
+      walletTypeAlert = WalletTypeAlert(editing: nil, validationManager: validationManager, context: context, usedNames: [])
+      enterToTextField("User entered value")
       
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [unowned self] in
-         XCTAssertEqual(alertMessage, WalletTypeAlert.NameValidation.tooShort.message, "Name '\(text)' is too short.")
+         XCTAssertEqual(alertMessage, NameValidation.tooShort.message)
          XCTAssertFalse(actionBTN.isEnabled, "Add action should be disabled.")
          XCTAssertTrue(cancelBTN.isEnabled, "Cancel action should be enabled.")
          textFieldDebounce.fulfill()
@@ -140,14 +87,43 @@ class WalletTypeAlertTests: XCTestCase {
       wait(for: [textFieldDebounce], timeout: 2)
    }
    
-   func test_enter_too_long_text(for text: String) throws {
-      walletTypeAlert = WalletTypeAlert(editing: nil, context: context, usedNames: [])
-      enterToTextField(text)
-      
-      XCTAssertEqual(nameTextFieldText, text, "Name text field should containt text '\(text)'.")
+   func test_enter_too_long_text() throws {
+      validationManager = ValidationManagerMock(nameValidationResult: .tooLong)
+      walletTypeAlert = WalletTypeAlert(editing: nil, validationManager: validationManager, context: context, usedNames: [])
+      enterToTextField("User entered value")
       
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [unowned self] in
-         XCTAssertEqual(alertMessage, WalletTypeAlert.NameValidation.tooLong.message)
+         XCTAssertEqual(alertMessage, NameValidation.tooLong.message)
+         XCTAssertFalse(actionBTN.isEnabled, "Add action should be disabled.")
+         XCTAssertTrue(cancelBTN.isEnabled, "Cancel action should be enabled.")
+         textFieldDebounce.fulfill()
+      }
+      
+      wait(for: [textFieldDebounce], timeout: 2)
+   }
+   
+   func test_enter_empty_text() throws {
+      validationManager = ValidationManagerMock(nameValidationResult: .isEmpty)
+      walletTypeAlert = WalletTypeAlert(editing: nil, validationManager: validationManager, context: context, usedNames: [])
+      enterToTextField("User entered value")
+      
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [unowned self] in
+         XCTAssertEqual(alertMessage, NameValidation.isEmpty.message)
+         XCTAssertFalse(actionBTN.isEnabled, "Add action should be disabled.")
+         XCTAssertTrue(cancelBTN.isEnabled, "Cancel action should be enabled.")
+         textFieldDebounce.fulfill()
+      }
+      
+      wait(for: [textFieldDebounce], timeout: 2)
+   }
+   
+   func test_enter_not_unique_text() throws {
+      validationManager = ValidationManagerMock(nameValidationResult: .notUnique)
+      walletTypeAlert = WalletTypeAlert(editing: nil, validationManager: validationManager, context: context, usedNames: [])
+      enterToTextField("User entered value")
+   
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [unowned self] in
+         XCTAssertEqual(alertMessage, NameValidation.notUnique.message)
          XCTAssertFalse(actionBTN.isEnabled, "Add action should be disabled.")
          XCTAssertTrue(cancelBTN.isEnabled, "Cancel action should be enabled.")
          textFieldDebounce.fulfill()

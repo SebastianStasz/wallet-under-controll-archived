@@ -31,18 +31,25 @@ extension WalletEntity: CoreDataEntity {
 // MARK: -- Methods
 
 extension WalletEntity {
-   
-   static let fetchedResultsController = FetchedResultsController<WalletEntity>()
+
+   static func fetchedResultsController(in context: NSManagedObjectContext = SceneDelegate.context) -> FetchedResultsController<WalletEntity> {
+      let walletTypes = FetchedResultsController<WalletEntity>(context: context)
+      return walletTypes
+   }
    
    static func create(in context: NSManagedObjectContext, using template: WalletTemplate) {
       let wallet = WalletEntity(context: context)
       wallet.id = UUID()
       wallet.creationDate = Date()
-      wallet.name = template.name
-      wallet.icon = template.icon
-      wallet.iconColor = template.iconColor
       wallet.initialBalance = template.initialBalance
-      wallet.type = template.type
-      wallet.currency = template.currency
+      wallet.update(using: template)
+   }
+   
+   func update(using template: WalletTemplate) {
+      name = template.name
+      icon = template.icon
+      iconColor = template.iconColor
+      type = template.type
+      currency = template.currency
    }
 }
