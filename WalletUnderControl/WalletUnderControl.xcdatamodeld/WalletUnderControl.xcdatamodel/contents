@@ -3,8 +3,14 @@
     <entity name="CurrencyEntity" representedClassName="CurrencyEntity" syncable="YES">
         <attribute name="code" attributeType="String"/>
         <attribute name="name" attributeType="String"/>
-        <attribute name="updateDate" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="updateDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="exchangeRates" toMany="YES" deletionRule="Nullify" destinationEntity="ExchangeRateEntity" inverseName="base" inverseEntity="ExchangeRateEntity"/>
         <relationship name="wallets" toMany="YES" deletionRule="Nullify" destinationEntity="WalletEntity" inverseName="currency" inverseEntity="WalletEntity"/>
+    </entity>
+    <entity name="ExchangeRateEntity" representedClassName="ExchangeRateEntity" syncable="YES">
+        <attribute name="code" attributeType="String"/>
+        <attribute name="rateValue" attributeType="Double" usesScalarValueType="YES"/>
+        <relationship name="base" maxCount="1" deletionRule="Nullify" destinationEntity="CurrencyEntity" inverseName="exchangeRates" inverseEntity="CurrencyEntity"/>
     </entity>
     <entity name="WalletEntity" representedClassName="WalletEntity" syncable="YES">
         <attribute name="creationDate" attributeType="Date" usesScalarValueType="NO"/>
@@ -21,7 +27,8 @@
         <relationship name="wallets" toMany="YES" deletionRule="Nullify" destinationEntity="WalletEntity" inverseName="type" inverseEntity="WalletEntity"/>
     </entity>
     <elements>
-        <element name="CurrencyEntity" positionX="-233.279296875" positionY="0.6588134765625" width="128" height="103"/>
+        <element name="CurrencyEntity" positionX="-250.8958129882812" positionY="30.99566650390625" width="128" height="118"/>
+        <element name="ExchangeRateEntity" positionX="-443.0656127929688" positionY="27.59307861328125" width="128" height="88"/>
         <element name="WalletEntity" positionX="-60.75616455078125" positionY="18.45382690429688" width="128" height="163"/>
         <element name="WalletTypeEntity" positionX="92.91082763671875" positionY="27.7108154296875" width="128" height="73"/>
     </elements>

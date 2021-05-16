@@ -10,6 +10,7 @@ import Foundation
 
 protocol APIService {
    func fetch<T: Decodable>(from url: URL) -> AnyPublisher<T, Error>
+   func fetch<T: Decodable>(from url: URL?) -> AnyPublisher<T, Error>
 }
 
 struct DataService: APIService {
@@ -23,4 +24,11 @@ struct DataService: APIService {
          .eraseToAnyPublisher()
    }
    
+   func fetch<T: Decodable>(from url: URL?) -> AnyPublisher<T, Error> {
+      guard let url = url else {
+         let error = URLError(.badURL)
+         return Fail(error: error).eraseToAnyPublisher()
+      }
+      return fetch(from: url)
+   }
 }

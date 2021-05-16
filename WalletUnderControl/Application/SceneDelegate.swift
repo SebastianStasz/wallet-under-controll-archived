@@ -10,14 +10,14 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
    var window: UIWindow?
-   static let context = PersistenceController.preview.context
+   static let context = PersistenceController.shared.context
 
    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
       guard let winScene = (scene as? UIWindowScene) else { return }
       
       let walletListVC = WalletListVC()
       
-      let currencies = Currencies()
+      let currencies = Currencies.shared
       let currencyListVC = CurrencyListVC(currencies: currencies)
       
       let walletListNC = UINavigationController(rootViewController: walletListVC)

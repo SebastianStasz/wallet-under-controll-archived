@@ -5,10 +5,12 @@
 //  Created by Sebastian Staszczyk on 07/05/2021.
 //
 
+import Combine
 import CoreData
 
-struct PersistenceController {
+class PersistenceController {
    static let shared = PersistenceController()
+   private var cancellables: Set<AnyCancellable> = []
    
    private let container: NSPersistentContainer
    let context: NSManagedObjectContext
@@ -26,6 +28,26 @@ struct PersistenceController {
       }
       
       context = container.viewContext
+      saveContextPublisher()
+   }
+   
+   private func save() {
+      do {
+         try context.save()
+         print("Saving Context")
+      }
+      catch let error {
+         // TODO: Temporary Fatal Error
+         fatalError("Saving context error: \(error)")
+      }
+   }
+   
+   private func saveContextPublisher() {
+      NotificationCenter.default
+         .publisher(for: .NSManagedObjectContextObjectsDidChange, object: context)
+         .debounce(for: .seconds(5), scheduler: DispatchQueue.main)
+         .sink { [weak self] notification in self?.save() }
+         .store(in: &cancellables)
    }
 }
 
@@ -117,7 +139,6 @@ struct CoreDataSample {
       for name in names {
          let walletType = WalletTypeEntity(context: context)
          walletType.name = name
-//         walletType.wallets = []
          walletTypes.append(walletType)
       }
       
@@ -127,7 +148,6 @@ struct CoreDataSample {
    static func createWalletType(context: NSManagedObjectContext) -> WalletTypeEntity {
       let walletType = WalletTypeEntity(context: context)
       walletType.name = "Getin Bank"
-//      walletType.wallets = []
       
       return walletType
    }
@@ -142,6 +162,13 @@ struct CoreDataSample {
          currency.code = currencyData.0
          currency.name = currencyData.1
          currency.updateDate = Date()
+         
+         let otherCurrencies = currenciesData.filter({ $0.0 != currency.code })
+         
+         for currencyData in otherCurrencies {
+            ExchangeRateEntity.create(from: currency, to: currencyData.0, value: 0, in: context)
+         }
+         
          return currency
       }
       

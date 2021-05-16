@@ -7,20 +7,25 @@
 
 import UIKit
 
-class CurrencyCell: UITableViewCell {
+class CurrencyCell: UITableViewCell, IdentifiableCell {
    static let id = "CurrencyCell"
    static let height: CGFloat = 45
    
    private var cellHorizontalStack: UIStackView!
    
    private let currencyCodeLabel = UILabel()
-   private let currencyNameLabel = UILabel()
+   private let currencySecondaryLabel = UILabel()
    
    func configure(with currency: CurrencyEntity, isSelected: Bool = false) {
       currencyCodeLabel.text = currency.code
-      currencyNameLabel.text = currency.name
+      currencySecondaryLabel.text = currency.name
       
       if isSelected { accessoryType = .checkmark }
+   }
+   
+   func configure(with exchangeRate: ExchangeRateEntity) {
+      currencyCodeLabel.text = exchangeRate.code
+      currencySecondaryLabel.text = String(format: "%.04f", exchangeRate.rateValue)
    }
    
    private func setupViews() {
@@ -29,10 +34,10 @@ class CurrencyCell: UITableViewCell {
       currencyCodeLabel.font = .monospacedSystemFont(ofSize: 20, weight: .semibold)
       currencyCodeLabel.tintColor = FontManager.Color.main
       
-      // Currency Name Label
-      currencyNameLabel.tintColor = FontManager.Color.main
+      // Currency Secondary Label
+      currencySecondaryLabel.tintColor = FontManager.Color.main
       
-      cellHorizontalStack = UIStackView(arrangedSubviews: [currencyCodeLabel, currencyNameLabel])
+      cellHorizontalStack = UIStackView(arrangedSubviews: [currencyCodeLabel, currencySecondaryLabel])
       cellHorizontalStack.axis = .horizontal
       cellHorizontalStack.spacing = 30
       
@@ -53,7 +58,7 @@ class CurrencyCell: UITableViewCell {
    
    override func prepareForReuse() {
       currencyCodeLabel.text = nil
-      currencyNameLabel.text = nil
+      currencySecondaryLabel.text = nil
       accessoryType = .none
    }
    
