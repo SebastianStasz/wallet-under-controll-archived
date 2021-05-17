@@ -10,7 +10,7 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
    var window: UIWindow?
-   static let context = PersistenceController.shared.context
+   static let context = PersistenceController.preview.context
 
    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
       guard let winScene = (scene as? UIWindowScene) else { return }

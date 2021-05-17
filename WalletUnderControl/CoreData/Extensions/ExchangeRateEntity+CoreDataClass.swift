@@ -2,7 +2,7 @@
 //  ExchangeRateEntity+CoreDataClass.swift
 //  WalletUnderControl
 //
-//  Created by Sebastian Staszczyk on 16/05/2021.
+//  Created by Sebastian Staszczyk on 17/05/2021.
 //
 //
 
