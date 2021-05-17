@@ -11,12 +11,13 @@ class SettingsVC: UIViewController {
    private let settings: SettingsProtocol
    
    private let settingsTB = UITableView(frame: .zero, style: .insetGrouped)
-   private let currencies = Currencies()
+   private let currencies: Currencies
    
    var sections: [SettingsSection] = []
    
-   init(settings: SettingsProtocol = Settings()) {
+   init(settings: SettingsProtocol = Settings(), currencies: Currencies = Currencies.shared) {
       self.settings = settings
+      self.currencies = currencies
       super.init(nibName: nil, bundle: nil)
       settingsTB.delegate = self
       settingsTB.dataSource = self

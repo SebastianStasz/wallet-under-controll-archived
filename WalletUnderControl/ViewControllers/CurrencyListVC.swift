@@ -15,7 +15,7 @@ class CurrencyListVC: UIViewController {
    
    private let currencyTBV = UITableView()
    
-   init(currencies: Currencies = Currencies(), picker: Picker? = nil) {
+   init(currencies: Currencies = Currencies.shared, picker: Picker? = nil) {
       self.currencies = currencies
       self.picker = picker
       super.init(nibName: nil, bundle: nil)
@@ -66,8 +66,56 @@ extension CurrencyListVC: UITableViewDelegate, UITableViewDataSource {
       tableView.deselectRow(at: indexPath, animated: true)
       let currency = currencies.all[indexPath.row]
       
-      picker?.selectRowHandler(currency)
+      if let picker = picker {
+         picker.selectRowHandler(currency)
+      } else {
+         presetExchangeRates(for: currency)
+      }
+      
       navigationController?.popViewController(animated: true)
+   }
+}
+
+// MARK: -- Currency Detail View Configuration
+
+extension CurrencyListVC {
+   
+   private func presetExchangeRates(for currency: CurrencyEntity) {
+      let exchangeRatesVC = getExchangeRatesVC(for: currency)
+      let exchangeRatesNC = UINavigationController(rootViewController: exchangeRatesVC)
+      
+      present(exchangeRatesNC, animated: true)
+   }
+   
+   private func getExchangeRatesVC(for currency: CurrencyEntity) -> UIViewController {
+      var exchangeRates = currency.exchangeRates.map{ $0 }
+      exchangeRates.sort(by: { $0.code < $1.code })
+      
+      let exchangeRatesVC = TableViewController(items: exchangeRates) { (cell: CurrencyCell, rate) in
+         cell.configure(with: rate)
+      }
+      
+      let showCurrencyInfoAlert = UIAction() { [unowned self] _ in
+         let alert = getCurrencyInfoAlert(for: currency)
+         exchangeRatesVC.present(alert, animated: true)
+      }
+      
+      let infoBTN = UIBarButtonItem(title: nil, image: UIImage(systemName: "info.circle"), primaryAction: showCurrencyInfoAlert)
+      exchangeRatesVC.title = "Exchange rates for: \(currency.code)"
+      exchangeRatesVC.navigationItem.leftBarButtonItem = infoBTN
+      
+      return exchangeRatesVC
+   }
+   
+   private func getCurrencyInfoAlert(for currency: CurrencyEntity) -> UIAlertController {
+      let title = "\(currency.code) Info"
+      let updateDate = currency.updateDate.string(format: .short, withTime: true)
+      let msg = "Data from: exchangerate.host\nLast update: \(updateDate)."
+      
+      let ac = UIAlertController(title: title, message: msg, preferredStyle: .alert)
+      ac.addAction(.okAction)
+      
+      return ac
    }
 }
 
