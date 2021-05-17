@@ -46,7 +46,9 @@ extension WalletEntity {
    }
    
    func update(using template: WalletTemplate) {
-      name = template.name
+      let name = template.name.trimmingCharacters(in: .whitespacesAndNewlines)
+      
+      self.name = name
       icon = template.icon
       iconColor = template.iconColor
       type = template.type

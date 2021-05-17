@@ -21,7 +21,7 @@ class WalletEntityTests: XCTestCase {
       // Put teardown code here. This method is called after the invocation of each test method in the class.
    }
    
-   func testCreateWalletEntity() throws {
+   func test_create_wallet_entity() throws {
       let walletType = CoreDataSample.createWalletType(context: context)
       let currency = CoreDataSample.createCurrencies(context: context).first!
       let template = WalletTemplate(name: "Savings", icon: .banknote, iconColor: .gray, type: walletType, initialBalance: 300, currency: currency)
@@ -43,5 +43,18 @@ class WalletEntityTests: XCTestCase {
       XCTAssertEqual(createdWallet.currency, template.currency)
       XCTAssertEqual(createdWallet.iconColor, template.iconColor)
       XCTAssertEqual(createdWallet.initialBalance, template.initialBalance)
+   }
+   
+   func test_create_wallet_entity_with_invalid_name() throws {
+      let walletType = CoreDataSample.createWalletType(context: context)
+      let currency = CoreDataSample.createCurrencies(context: context).first!
+      let template = WalletTemplate(name: "     Te st  \n  ", icon: .banknote, iconColor: .gray, type: walletType, initialBalance: 300, currency: currency)
+      
+      WalletEntity.create(in: context, using: template)
+      
+      let wallets = try! context.fetch(request)
+      let createdWallet = wallets.first!
+      
+      XCTAssertEqual(createdWallet.name, "Te st", "Spaces and new lines should be trimmed.")
    }
 }

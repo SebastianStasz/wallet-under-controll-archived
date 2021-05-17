@@ -28,6 +28,7 @@ extension WalletTypeEntity {
    }
    
    static func create(in context: NSManagedObjectContext, name: String) {
+      let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
       let walletType = WalletTypeEntity(context: context)
       walletType.name = name
    }
