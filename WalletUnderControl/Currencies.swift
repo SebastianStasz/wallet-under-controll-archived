@@ -12,19 +12,18 @@ import Foundation
 class Currencies: ObservableObject {
    static let shared = Currencies()
    
+   private let context: NSManagedObjectContext
+   private let currencyAPI: CurrencyAPIType
+   private let dataService: APIService
+   
+   private let updateExchangeRates = PassthroughSubject<CurrencyEntity, Never>()
    private var cancellables: Set<AnyCancellable> = []
    private let currencyData = "currencyData"
-   private let currencyAPI: CurrencyAPI
-   private let currentDate = Date()
-   
-   private let context: NSManagedObjectContext
-   private let dataService: APIService
-   let updateExchangeRates = PassthroughSubject<CurrencyEntity, Never>()
    
    @Published private(set) var all: [CurrencyEntity] = [] 
    
    init(dataService: APIService = DataService.shared,
-        currencyAPI: CurrencyAPI = CurrencyAPI(),
+        currencyAPI: CurrencyAPIType = CurrencyAPI(),
         context: NSManagedObjectContext = SceneDelegate.context)
    {
       self.dataService = dataService
@@ -33,11 +32,11 @@ class Currencies: ObservableObject {
       
       print("Currencies Init")
       
-      waitForCurrenciesToUpdate()
-      fetchCurrenciesMainData()
+      setupExchangeRatesUpdater()
+      fetchCurrencies()
    }
    
-   private func fetchCurrenciesMainData() {
+   private func fetchCurrencies() {
       let request = CurrencyEntity.createFetchRequest()
       request.sortDescriptors = [CurrencyEntity.sortByCodeASC]
       request.predicate = nil
@@ -56,13 +55,12 @@ class Currencies: ObservableObject {
 
 extension Currencies {
    
-   private func waitForCurrenciesToUpdate() {
+   private func setupExchangeRatesUpdater() {
       updateExchangeRates
          .filter { currency in
             guard let date = currency.updateDate else { return true }
-            return date.timeIntervalSinceNow > 360000000000
+            return date.timeIntervalSinceNow > 3600000
          }
-         .print()
          .sink { [unowned self] currency in
             updateExchangeRates(for: currency)
          }
@@ -73,14 +71,19 @@ extension Currencies {
       let url = currencyAPI.getLatestExchangeRates(base: currency.code, forCurrencyCodes: all.map { $0.code })
       let currencyRatesData: AnyPublisher<ExchangeRateRequest, Error> = dataService.fetch(from: url)
       
-      currencyRatesData.sink { completion in
-         if case .failure(let error) = completion {
+      currencyRatesData
+         .filter {
+            let isValid = $0.base == currency.code
+            assert(isValid) ; return isValid
+         }
+         .map { $0.rates }
+         .sink { if case .failure(let error) = $0 {
             fatalError("Update exchange rates error: \(error)")
          }
-      } receiveValue: { exchangeRateRequest in
+         } receiveValue: { exchangeRates in
          _ = currency.exchangeRates.map { exchangeRate in
-            // TODO: Temporary Force-Unwrap
-            let rateValue = exchangeRateRequest.rates.first(where: { $0.key == exchangeRate.code })!.value
+            let rateData = exchangeRates.first(where: { $0.key == exchangeRate.code })
+            let rateValue = rateData?.value ?? 0
             exchangeRate.rateValue = rateValue
          }
       }
@@ -99,10 +102,9 @@ extension Currencies {
       _ = all.map { context.delete($0) }
       
       currenciesData
-         .sink { completion in
-            if case .failure(let error) = completion {
-               fatalError("Create currencies error: \(error)")
-            }
+         .sink { if case .failure(let error) = $0 {
+            fatalError("Create currencies error: \(error)")
+         }
          } receiveValue: { [unowned self] currenciesData in
             _ = currenciesData
                .map { CurrencyEntity.create(code: $0.0, name: $0.1, in: context) }
@@ -110,7 +112,7 @@ extension Currencies {
                   createExchangeRates(for: currency, currenciesData: currenciesData)
                }
             
-            fetchCurrenciesMainData()
+            fetchCurrencies()
          }
          .store(in: &cancellables)
    }

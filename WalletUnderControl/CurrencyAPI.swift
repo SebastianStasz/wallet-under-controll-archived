@@ -7,7 +7,11 @@
 
 import Foundation
 
-struct CurrencyAPI {
+protocol CurrencyAPIType {
+   func getLatestExchangeRates(base currencyCode: String, forCurrencyCodes symbols: [String]) -> URL?
+}
+
+struct CurrencyAPI: CurrencyAPIType {
    private let exchangeRatesURL = "https://api.exchangerate.host"
    private let startComponents: URLComponents
    
