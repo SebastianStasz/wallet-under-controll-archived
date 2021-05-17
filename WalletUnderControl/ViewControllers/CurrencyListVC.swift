@@ -109,8 +109,9 @@ extension CurrencyListVC {
    
    private func getCurrencyInfoAlert(for currency: CurrencyEntity) -> UIAlertController {
       let title = "\(currency.code) Info"
-      // TODO: Check for nil & make date formatter
-      let msg = "Data from: exchangerate.host\nLast update: \(currency.updateDate)."
+      let updateDate = currency.updateDate.string(format: .short, withTime: true)
+      let msg = "Data from: exchangerate.host\nLast update: \(updateDate)."
+      
       let ac = UIAlertController(title: title, message: msg, preferredStyle: .alert)
       ac.addAction(.okAction)
       

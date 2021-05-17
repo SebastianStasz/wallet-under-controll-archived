@@ -46,6 +46,8 @@
 		9EA6DD692648787100424ACB /* CurrencyListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA6DD682648787100424ACB /* CurrencyListVC.swift */; };
 		9EA6DD6B26487F9C00424ACB /* currencyData.json in Resources */ = {isa = PBXBuildFile; fileRef = 9EA6DD6A26487F9C00424ACB /* currencyData.json */; };
 		9EA6DD6D264880DF00424ACB /* CurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA6DD6C264880DF00424ACB /* CurrencyCell.swift */; };
+		9EB83CD92652A4900090AA61 /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB83CD82652A4900090AA61 /* DateHelper.swift */; };
+		9EB83CDB2652B2700090AA61 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB83CDA2652B2700090AA61 /* Date+Extensions.swift */; };
 		9EF457A8264488F400EFB138 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF457A7264488F400EFB138 /* AppDelegate.swift */; };
 		9EF457AA264488F400EFB138 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF457A9264488F400EFB138 /* SceneDelegate.swift */; };
 		9EF457B1264488FA00EFB138 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9EF457B0264488FA00EFB138 /* Assets.xcassets */; };
@@ -104,6 +106,8 @@
 		9EA6DD682648787100424ACB /* CurrencyListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyListVC.swift; sourceTree = "<group>"; };
 		9EA6DD6A26487F9C00424ACB /* currencyData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = currencyData.json; sourceTree = "<group>"; };
 		9EA6DD6C264880DF00424ACB /* CurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCell.swift; sourceTree = "<group>"; };
+		9EB83CD82652A4900090AA61 /* DateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
+		9EB83CDA2652B2700090AA61 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		9EF457A4264488F400EFB138 /* WalletUnderControl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WalletUnderControl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EF457A7264488F400EFB138 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9EF457A9264488F400EFB138 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -173,6 +177,7 @@
 				9E8B75B2264C143200475DD6 /* UITextField+Extensions.swift */,
 				9E00FC2C264C4D7000B3D855 /* UIButton+Extensions.swift */,
 				9E8B788E264AB2A9000A2856 /* UserDefaults+Extensions.swift */,
+				9EB83CDA2652B2700090AA61 /* Date+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -246,6 +251,7 @@
 				9E6B77BF2649B69B00931C77 /* Application */,
 				9E05849D26453850003C590E /* PersistenceController.swift */,
 				9E0584C52645E28E003C590E /* DataService.swift */,
+				9EB83CD82652A4900090AA61 /* DateHelper.swift */,
 				9E0584B72645DC90003C590E /* Currencies.swift */,
 				9E26DC3F2650027F005F9C3B /* CurrencyAPI.swift */,
 				9E8B788C264AB285000A2856 /* Settings.swift */,
@@ -403,6 +409,7 @@
 				9EA477F326512801006571AF /* ExchangeRateEntity+CoreDataClass.swift in Sources */,
 				9E0584AB26456B8B003C590E /* UIAlertAction+Extensions.swift in Sources */,
 				9E8B75B1264C0B3E00475DD6 /* WalletTypeCell.swift in Sources */,
+				9EB83CD92652A4900090AA61 /* DateHelper.swift in Sources */,
 				9E4052062649616500410C58 /* SettingsSection.swift in Sources */,
 				9E00FC2B264C45F900B3D855 /* WalletTypeListView.swift in Sources */,
 				9EF457BD264489F400EFB138 /* WalletListVC.swift in Sources */,
@@ -414,6 +421,7 @@
 				9EA477F426512801006571AF /* ExchangeRateEntity+CoreDataProperties.swift in Sources */,
 				9E0584A526454769003C590E /* WalletIcon.swift in Sources */,
 				9EA6DD6D264880DF00424ACB /* CurrencyCell.swift in Sources */,
+				9EB83CDB2652B2700090AA61 /* Date+Extensions.swift in Sources */,
 				9E4052082649632B00410C58 /* SettingsVC.swift in Sources */,
 				9E0584B82645DC90003C590E /* Currencies.swift in Sources */,
 				9EA477F826513C48006571AF /* CurrencyEntity+CoreDataProperties.swift in Sources */,
