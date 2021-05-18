@@ -58,7 +58,7 @@ extension WalletTypeAlert {
          name = name.trimmingCharacters(in: .whitespacesAndNewlines)
          
          if let typeToEdit = walletType {
-            typeToEdit.name = name
+            typeToEdit.update(name: name)
          } else {
             WalletTypeEntity.create(in: context, name: name)
          }

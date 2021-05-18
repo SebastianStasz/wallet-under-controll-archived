@@ -10,7 +10,7 @@ import XCTest
 
 class SettingsTests: XCTestCase {
    
-   private let currencies = CoreDataSample.createCurrencies(context: PersistenceController.empty.context)
+   private let currencies = CurrencyEntity.createCurrencies(context: PersistenceController.empty.context)
    private var settings: Settings!
    
    override func setUpWithError() throws {

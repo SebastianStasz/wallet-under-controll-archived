@@ -37,7 +37,7 @@ class WalletTypeAlertTests: XCTestCase {
    }
    
    func test_present_alert_with_editing() throws {
-      let walletType = CoreDataSample.createWalletType(context: context)
+      let walletType = WalletTypeEntity.createWalletType(context: context)
       let walletTypeName = walletType.name
       walletTypeAlert = WalletTypeAlert(editing: walletType, context: context, usedNames: [])
       

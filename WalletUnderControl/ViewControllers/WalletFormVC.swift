@@ -24,7 +24,7 @@ class WalletFormVC: UIViewController {
    
    /// Without specifing, fetched results controllers will be created in given context.
    init(wallet: WalletEntity?,
-        currencies: Currencies = Currencies(),
+        currencies: Currencies = Currencies.shared,
         settings: SettingsProtocol = Settings(),
         context: NSManagedObjectContext = SceneDelegate.context,
         validationManager: ValidationService = ValidationManager(),

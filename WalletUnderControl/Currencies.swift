@@ -84,8 +84,11 @@ extension Currencies {
          _ = currency.exchangeRates.map { exchangeRate in
             let rateData = exchangeRates.first(where: { $0.key == exchangeRate.code })
             let rateValue = rateData?.value ?? 0
-            exchangeRate.rateValue = rateValue
+            assert(rateValue != 0, "Rate value should never be 0 (nil).")
+            exchangeRate.update(rateValue: rateValue)
          }
+            
+         currency.update(date: Date())
       }
       .store(in: &cancellables)
    }
@@ -119,7 +122,6 @@ extension Currencies {
    
    private func createExchangeRates(for currency: CurrencyEntity, currenciesData: [String : String]) {
       let otherCurrencies = currenciesData.filter({ $0.0 != currency.code })
-      currency.updateDate = Date()
       
       for currencyData in otherCurrencies {
          ExchangeRateEntity.create(from: currency, to: currencyData.0, value: 0, in: context)

@@ -22,8 +22,8 @@ class WalletEntityTests: XCTestCase {
    }
    
    func test_create_wallet_entity() throws {
-      let walletType = CoreDataSample.createWalletType(context: context)
-      let currency = CoreDataSample.createCurrencies(context: context).first!
+      let walletType = WalletTypeEntity.createWalletType(context: context)
+      let currency = CurrencyEntity.createCurrencies(context: context).first!
       let template = WalletTemplate(name: "Savings", icon: .banknote, iconColor: .gray, type: walletType, initialBalance: 300, currency: currency)
       
       let wallets1 = try! context.fetch(request)
@@ -46,8 +46,8 @@ class WalletEntityTests: XCTestCase {
    }
    
    func test_create_wallet_entity_with_invalid_name() throws {
-      let walletType = CoreDataSample.createWalletType(context: context)
-      let currency = CoreDataSample.createCurrencies(context: context).first!
+      let walletType = WalletTypeEntity.createWalletType(context: context)
+      let currency = CurrencyEntity.createCurrencies(context: context).first!
       let template = WalletTemplate(name: "     Te st  \n  ", icon: .banknote, iconColor: .gray, type: walletType, initialBalance: 300, currency: currency)
       
       WalletEntity.create(in: context, using: template)
