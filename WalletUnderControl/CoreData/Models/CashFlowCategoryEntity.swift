@@ -32,8 +32,8 @@ extension CashFlowCategoryEntity {
    
    static let sortByNameASC = NSSortDescriptor(keyPath: \CashFlowCategoryEntity.name, ascending: true)
    
-   static let predicateIncome = NSPredicate(format: "type_ == \(CashFlowType.income.rawValue)")
-   static let predicateExpense = NSPredicate(format: "type_ == \(CashFlowType.expense.rawValue)")
+   static let filterIncome = NSPredicate(format: "type_ == \(CashFlowType.income.rawValue)")
+   static let filterExpense = NSPredicate(format: "type_ == \(CashFlowType.expense.rawValue)")
 }
 
 // MARK: -- Methods
@@ -77,10 +77,10 @@ extension CashFlowCategoryEntity: Identifiable { }
 
 extension CashFlowCategoryEntity {
    
-   static func createCashFlowIncomeCategory(context: NSManagedObjectContext) -> CashFlowCategoryEntity {
+   static func createCashFlowCategory(type: CashFlowType, context: NSManagedObjectContext) -> CashFlowCategoryEntity {
       let category = CashFlowCategoryEntity(context: context)
-      category.name = "Income"
-      category.type = .income
+      category.name = "Cash Flow"
+      category.type = type
       return category
    }
 }

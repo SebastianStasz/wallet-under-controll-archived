@@ -47,12 +47,14 @@ class CashFlowCategoryEntityTests: XCTestCase {
       XCTAssertEqual(category.name, "T e st", "Trailing, leading spaces and new lines should be deleted.")
    }
    
+   // MARK: Predicate Tests
+   
    func test_cash_flow_predicate_income() throws {
       CashFlowCategoryEntity.create(in: context, name: "Test1", type: .expense)
       CashFlowCategoryEntity.create(in: context, name: "Test2", type: .expense)
       CashFlowCategoryEntity.create(in: context, name: "Test3", type: .income)
       
-      let categories = fetchCashFlowCategory(predicate: CashFlowCategoryEntity.predicateIncome)
+      let categories = fetchCashFlowCategory(predicate: CashFlowCategoryEntity.filterIncome)
       XCTAssertEqual(categories.count, 1, "Only income should be fetched.")
       XCTAssertEqual(categories.first!.type, .income)
    }
@@ -62,7 +64,7 @@ class CashFlowCategoryEntityTests: XCTestCase {
       CashFlowCategoryEntity.create(in: context, name: "Test2", type: .income)
       CashFlowCategoryEntity.create(in: context, name: "Test3", type: .income)
       
-      let categories = fetchCashFlowCategory(predicate: CashFlowCategoryEntity.predicateExpense)
+      let categories = fetchCashFlowCategory(predicate: CashFlowCategoryEntity.filterExpense)
       XCTAssertEqual(categories.count, 1, "Only expense should be fetched.")
       XCTAssertEqual(categories.first!.type, .expense)
    }

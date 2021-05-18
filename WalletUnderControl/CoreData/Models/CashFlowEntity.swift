@@ -36,6 +36,16 @@ extension CashFlowEntity {
 
 extension CashFlowEntity {
    
+   static func filter(type: CashFlowType, month: Int, year: Int) -> NSPredicate {
+      let startOfMonth = DateComponents.init(calendar: Calendar.current, year: year, month: month, day: 1)
+      let startDate = startOfMonth.date! 
+      let endDate = Calendar.current.date(byAdding: .month, value: 1, to: startDate)!
+      
+      let type = NSPredicate(format: "category.type_ == \(type.rawValue)")
+      let date = NSPredicate(format: "date >= %@ AND date < %@", startDate as NSDate, endDate as NSDate)
+      return NSCompoundPredicate(andPredicateWithSubpredicates: [type, date])
+   }
+   
    static func create(in context: NSManagedObjectContext, using template: CashFlowTemplate) {
       let cashFlow = CashFlowEntity(context: context)
       cashFlow.wallet = template.wallet
