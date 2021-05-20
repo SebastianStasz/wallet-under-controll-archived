@@ -21,11 +21,16 @@ class ValidationManager: ValidationService {
       return .isValid
    }
     
-   func validateCurrency(_ text: String) -> BalanceValidation {
+   func validateCurrency(_ text: String, canEqualZero: Bool = true) -> BalanceValidation {
       if text.isEmpty { return .isEmpty }
-      let currencyPredicate = NSPredicate(format: "SELF MATCHES %@", currencyRegex)
-      let isValid = currencyPredicate.evaluate(with: text)
       
-      return isValid ? .isValid : .isInvalid
+      if !canEqualZero, Double(text.comasToDots()) == 0 { return .isZero }
+      
+      let currencyPredicate = NSPredicate(format: "SELF MATCHES %@", currencyRegex)
+      if currencyPredicate.evaluate(with: text) { return .isValid }
+      
+      return .isInvalid
    }
 }
+
+

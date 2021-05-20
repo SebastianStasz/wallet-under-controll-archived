@@ -1,32 +1,47 @@
 //
-//  WalletTypeAlertTests.swift
+//  GroupingEntityAlertTests.swift
 //  WalletUnderControlTests
 //
 //  Created by Sebastian Staszczyk on 12/05/2021.
 //
 
 import XCTest
+import CoreData
 @testable import WalletUnderControl
 
-class WalletTypeAlertTests: XCTestCase {
+class GroupingEntityAlertTests: XCTestCase {
    
    private var textFieldDebounce: XCTestExpectation!
    
    private let context = PersistenceController.empty.context
    private var validationManager: ValidationManagerMock!
-   private var walletTypeAlert: WalletTypeAlert!
+   private var groupingEntityAlert: GroupingEntityAlert<WalletTypeEntity>!
    
    override func setUpWithError() throws {
       textFieldDebounce = XCTestExpectation(description: "Debounce for text field.")
       validationManager = nil
-      walletTypeAlert = nil
+      groupingEntityAlert = nil
       context.reset()
    }
    
-   func test_present_alert_without_editing() throws {
-      walletTypeAlert = WalletTypeAlert(editing: nil, context: context, usedNames: [])
-      
+   func test_presenting_alert_for_wallet_type() throws {
+      groupingEntityAlert = GroupingEntityAlert<WalletTypeEntity>(editing: nil, context: context, usedNames: [])
       XCTAssertEqual(alertTitle, "Create Wallet Type", "Default title for alert without editing.")
+   }
+   
+   func test_presenting_alert_for_expense_category() throws {
+      let expenseCategoryAlert = GroupingEntityAlert<CashFlowCategoryEntity>(cashFlowType: .expense, usedNames: [])
+      XCTAssertEqual(expenseCategoryAlert.alertController.title, "Create Expense Category", "Default title for alert without editing.")
+   }
+   
+   func test_presenting_alert_for_income_category() throws {
+      let expenseCategoryAlert = GroupingEntityAlert<CashFlowCategoryEntity>(cashFlowType: .income, usedNames: [])
+      XCTAssertEqual(expenseCategoryAlert.alertController.title, "Create Income Category", "Default title for alert without editing.")
+   }
+   
+   func test_present_alert_without_editing() throws {
+      groupingEntityAlert = GroupingEntityAlert<WalletTypeEntity>(editing: nil, context: context, usedNames: [])
+      
       XCTAssertEqual(cancelBTN.title, "Cancel", "'Cancel' should be title for cancel button.")
       XCTAssertEqual(actionBTN.title, "Add", "'Add' should be title for action button.")
       XCTAssertEqual(nameTextFieldText, "", "Name text field should be empty.")
@@ -39,7 +54,7 @@ class WalletTypeAlertTests: XCTestCase {
    func test_present_alert_with_editing() throws {
       let walletType = WalletTypeEntity.createWalletType(context: context)
       let walletTypeName = walletType.name
-      walletTypeAlert = WalletTypeAlert(editing: walletType, context: context, usedNames: [])
+      groupingEntityAlert = GroupingEntityAlert(editing: walletType, context: context, usedNames: [])
       
       XCTAssertEqual(alertTitle, "Edit \"\(walletTypeName)\"", "Title for alert with editing.")
       XCTAssertEqual(cancelBTN.title, "Cancel", "'Cancel' should be title for cancel button.")
@@ -52,14 +67,14 @@ class WalletTypeAlertTests: XCTestCase {
    }
    
    func test_enter_value_to_text_field() throws {
-      walletTypeAlert = WalletTypeAlert(editing: nil, context: context, usedNames: [])
+      groupingEntityAlert = GroupingEntityAlert(editing: nil, context: context, usedNames: [])
       enterToTextField("Sample Name")
       XCTAssertEqual(nameTextFieldText, "Sample Name", "Text field should contain text: 'Sample Name'.")
    }
    
    func test_enter_valid_text() throws {
       validationManager = ValidationManagerMock(nameValidationResult: .isValid)
-      walletTypeAlert = WalletTypeAlert(editing: nil, validationManager: validationManager, context: context, usedNames: [])
+      groupingEntityAlert = GroupingEntityAlert(editing: nil, validationManager: validationManager, context: context, usedNames: [])
       enterToTextField("User entered value")
       
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [unowned self] in
@@ -74,7 +89,7 @@ class WalletTypeAlertTests: XCTestCase {
    
    func test_enter_too_short_text() throws {
       validationManager = ValidationManagerMock(nameValidationResult: .tooShort)
-      walletTypeAlert = WalletTypeAlert(editing: nil, validationManager: validationManager, context: context, usedNames: [])
+      groupingEntityAlert = GroupingEntityAlert(editing: nil, validationManager: validationManager, context: context, usedNames: [])
       enterToTextField("User entered value")
       
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [unowned self] in
@@ -89,7 +104,7 @@ class WalletTypeAlertTests: XCTestCase {
    
    func test_enter_too_long_text() throws {
       validationManager = ValidationManagerMock(nameValidationResult: .tooLong)
-      walletTypeAlert = WalletTypeAlert(editing: nil, validationManager: validationManager, context: context, usedNames: [])
+      groupingEntityAlert = GroupingEntityAlert(editing: nil, validationManager: validationManager, context: context, usedNames: [])
       enterToTextField("User entered value")
       
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [unowned self] in
@@ -104,7 +119,7 @@ class WalletTypeAlertTests: XCTestCase {
    
    func test_enter_empty_text() throws {
       validationManager = ValidationManagerMock(nameValidationResult: .isEmpty)
-      walletTypeAlert = WalletTypeAlert(editing: nil, validationManager: validationManager, context: context, usedNames: [])
+      groupingEntityAlert = GroupingEntityAlert(editing: nil, validationManager: validationManager, context: context, usedNames: [])
       enterToTextField("User entered value")
       
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [unowned self] in
@@ -119,7 +134,7 @@ class WalletTypeAlertTests: XCTestCase {
    
    func test_enter_not_unique_text() throws {
       validationManager = ValidationManagerMock(nameValidationResult: .notUnique)
-      walletTypeAlert = WalletTypeAlert(editing: nil, validationManager: validationManager, context: context, usedNames: [])
+      groupingEntityAlert = GroupingEntityAlert(editing: nil, validationManager: validationManager, context: context, usedNames: [])
       enterToTextField("User entered value")
    
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [unowned self] in
@@ -135,10 +150,10 @@ class WalletTypeAlertTests: XCTestCase {
 
 // MARK: -- Alert Components
 
-extension WalletTypeAlertTests {
+extension GroupingEntityAlertTests {
    
    private var ac: UIAlertController {
-      walletTypeAlert.alertController
+      groupingEntityAlert.alertController
    }
    
    private var alertTitle: String {
@@ -164,9 +179,9 @@ extension WalletTypeAlertTests {
 
 // MARK: -- Alert Interactions
 
-extension WalletTypeAlertTests {
+extension GroupingEntityAlertTests {
    func enterToTextField(_ text: String) {
-      walletTypeAlert.alertController.textFields![0].text = ""
-      walletTypeAlert.alertController.textFields![0].insertText(text)
+      groupingEntityAlert.alertController.textFields![0].text = ""
+      groupingEntityAlert.alertController.textFields![0].insertText(text)
    }
 }

@@ -54,7 +54,7 @@ class CashFlowCategoryEntityTests: XCTestCase {
       CashFlowCategoryEntity.create(in: context, name: "Test2", type: .expense)
       CashFlowCategoryEntity.create(in: context, name: "Test3", type: .income)
       
-      let categories = fetchCashFlowCategory(predicate: CashFlowCategoryEntity.filterIncome)
+      let categories = fetchCashFlowCategory(predicate: CashFlowCategoryEntity.filterByType(.income))
       XCTAssertEqual(categories.count, 1, "Only income should be fetched.")
       XCTAssertEqual(categories.first!.type, .income)
    }
@@ -64,7 +64,7 @@ class CashFlowCategoryEntityTests: XCTestCase {
       CashFlowCategoryEntity.create(in: context, name: "Test2", type: .income)
       CashFlowCategoryEntity.create(in: context, name: "Test3", type: .income)
       
-      let categories = fetchCashFlowCategory(predicate: CashFlowCategoryEntity.filterExpense)
+      let categories = fetchCashFlowCategory(predicate: CashFlowCategoryEntity.filterByType(.expense))
       XCTAssertEqual(categories.count, 1, "Only expense should be fetched.")
       XCTAssertEqual(categories.first!.type, .expense)
    }

@@ -112,8 +112,8 @@ extension WalletFormVC {
       walletFormView.balanceTextField.textPublisher()
          .debounce(for: 0.3, scheduler: RunLoop.main)
          .map { [unowned self] value in
-            let validation = validationManager.validateCurrency(value)
-            walletFormView.balanceValidationLabel.text = validation.message
+            let validation = validationManager.validateCurrency(value, canEqualZero: true)
+            walletFormView.balanceValidationLabel.text = validation.message(fieldName: "Balance")
             form.initialBalance = Double(value.replacingOccurrences(of: ",", with: "."))
             return validation
          }

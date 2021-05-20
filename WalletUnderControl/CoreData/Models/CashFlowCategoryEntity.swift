@@ -32,13 +32,16 @@ extension CashFlowCategoryEntity {
    
    static let sortByNameASC = NSSortDescriptor(keyPath: \CashFlowCategoryEntity.name, ascending: true)
    
-   static let filterIncome = NSPredicate(format: "type_ == \(CashFlowType.income.rawValue)")
-   static let filterExpense = NSPredicate(format: "type_ == \(CashFlowType.expense.rawValue)")
+   static func filterByType(_ type: CashFlowType) -> NSPredicate {
+      NSPredicate(format: "type_ == \(type.rawValue)")
+   }
 }
 
 // MARK: -- Methods
 
-extension CashFlowCategoryEntity {
+extension CashFlowCategoryEntity: GroupingEntity {
+   
+   static let name = "CashFlowCategoryEntity"
    
    static func create(in context: NSManagedObjectContext, name: String, type: CashFlowType) {
       let category = CashFlowCategoryEntity(context: context)
@@ -82,5 +85,28 @@ extension CashFlowCategoryEntity {
       category.name = "Cash Flow"
       category.type = type
       return category
+   }
+   
+   static func createCashFlowCategories(context: NSManagedObjectContext) -> [CashFlowCategoryEntity] {
+      let incomeNames = ["Work", "Gift", "Bonus", "Crypto"]
+      let expenseNames = ["Food", "Car", "Hygiene", "Hobby"]
+      
+      var categories: [CashFlowCategoryEntity] = []
+      
+      for name in incomeNames {
+         let income = CashFlowCategoryEntity(context: context)
+         income.name = name
+         income.type = .income
+         categories.append(income)
+      }
+      
+      for name in expenseNames {
+         let income = CashFlowCategoryEntity(context: context)
+         income.name = name
+         income.type = .expense
+         categories.append(income)
+      }
+      
+      return categories
    }
 }

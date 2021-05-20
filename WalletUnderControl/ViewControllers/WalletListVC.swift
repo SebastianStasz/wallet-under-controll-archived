@@ -5,16 +5,25 @@
 //  Created by Sebastian Staszczyk on 06/05/2021.
 //
 
+import Combine
 import CoreData
 import UIKit
 
 class WalletListVC: UIViewController {
+   private var cancellables: Set<AnyCancellable> = []
+   @Published private var cashFlowAlert: CashFlowAlert?
+   
    private let wallets: FetchedResultsController<WalletEntity>
    private let walletsTBV = UITableView()
    
-   init(wallets: FetchedResultsController<WalletEntity> = WalletEntity.fetchedResultsController()) {
+   init(wallets: FetchedResultsController<WalletEntity>) {
       self.wallets = wallets
       super.init(nibName: nil, bundle: nil)
+      
+      $cashFlowAlert
+         .compactMap { $0?.alert }
+         .sink { [unowned self] in present($0, animated: true) }
+         .store(in: &cancellables)
    }
    
    override func viewDidLoad() {
@@ -52,9 +61,26 @@ extension WalletListVC {
       let wallet = wallets.fetchedResultsController.object(at: indexPath) as! WalletEntity
       
       let config = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
-         let deleteBTN = UIAction.deleteAction { [unowned self] in showDeletingAlertForWallet(wallet) }
-         let editBTN = UIAction.editAction { [unowned self] in showActionWalletSheet(for: wallet) }
-         return UIMenu(title: wallet.name, children: [editBTN, deleteBTN])
+         
+         let addIncomeBTN = UIAction.addIncome { [unowned self] in
+            let vc = CashFlowAlertVC(ofType: .income, forWallet: wallet)
+            cashFlowAlert = CashFlowAlert(cashFlowAlertVC: vc)
+         }
+         
+         let addExpenseBTN = UIAction.addExpense { [unowned self] in
+            let vc = CashFlowAlertVC(ofType: .expense, forWallet: wallet)
+            cashFlowAlert = CashFlowAlert(cashFlowAlertVC: vc)
+         }
+         
+         let deleteBTN = UIAction.delete { [unowned self] in
+            showDeletingAlertForWallet(wallet)
+         }
+         
+         let editBTN = UIAction.edit { [unowned self] in
+            showActionWalletSheet(for: wallet)
+         }
+         
+         return UIMenu(title: wallet.name, children: [addExpenseBTN, addIncomeBTN, editBTN, deleteBTN])
       }
       
       return config
@@ -66,7 +92,7 @@ extension WalletListVC {
       
       let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
       ac.addAction(UIAlertAction.deleteAction { [unowned self] in wallets.delete(wallet) })
-      ac.addAction(UIAlertAction.cancelAction)
+      ac.addAction(UIAlertAction.cancel)
       
       present(ac, animated: true)
    }
@@ -124,6 +150,17 @@ extension WalletListVC: NSFetchedResultsControllerDelegate {
          walletsTBV.insertRows(at: [indexPath!], with: .automatic)
       default: break
       }
+   }
+}
+
+// MARK: -- Initializers
+
+extension WalletListVC {
+   
+   /// Wallets sorted by name ascending in sceneDelegate context.
+   convenience init() {
+      let sort = WalletEntity.sortByNameASC
+      self.init(wallets: WalletEntity.fetchedResultsController(sorting: [sort]))
    }
 }
 

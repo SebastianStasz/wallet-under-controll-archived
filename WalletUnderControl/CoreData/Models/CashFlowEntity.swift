@@ -49,16 +49,16 @@ extension CashFlowEntity {
    static func create(in context: NSManagedObjectContext, using template: CashFlowTemplate) {
       let cashFlow = CashFlowEntity(context: context)
       cashFlow.wallet = template.wallet
-      cashFlow.category = template.category
-      cashFlow.update(name: template.name, date: template.date, value: template.value)
+      cashFlow.update(using: template)
    }
    
-   func update(name: String, date: Date, value: Double) {
-      let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+   func update(using template: CashFlowTemplate) {
+      let name = template.name.trimmingCharacters(in: .whitespacesAndNewlines)
       
       self.name = name
-      self.date = date
-      self.value = value
+      self.date = template.date
+      self.value = template.value
+      self.category = template.category
    }
 }
 

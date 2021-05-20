@@ -40,19 +40,14 @@ public class WalletEntity: NSManagedObject {
 
 // MARK: -- Static Properties
 
-extension WalletEntity: CoreDataEntity {
-   static let name = "WalletEntity"
+extension WalletEntity {
+   static let sortByNameASC = NSSortDescriptor(keyPath: \WalletEntity.name, ascending: true)
 }
 
 // MARK: -- Methods
 
 extension WalletEntity {
 
-   static func fetchedResultsController(in context: NSManagedObjectContext = SceneDelegate.context) -> FetchedResultsController<WalletEntity> {
-      let walletTypes = FetchedResultsController<WalletEntity>(context: context)
-      return walletTypes
-   }
-   
    static func create(in context: NSManagedObjectContext, using template: WalletTemplate) {
       let wallet = WalletEntity(context: context)
       wallet.id = UUID()

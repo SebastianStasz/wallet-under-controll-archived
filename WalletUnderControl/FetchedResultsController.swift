@@ -8,11 +8,7 @@
 import CoreData
 import Foundation
 
-protocol CoreDataEntity: NSManagedObject {
-   static var name: String { get }
-}
-
-class FetchedResultsController<T>: NSObject, NSFetchedResultsControllerDelegate where T: CoreDataEntity {
+class FetchedResultsController<T>: NSObject, NSFetchedResultsControllerDelegate where T: NSManagedObject {
    private let context: NSManagedObjectContext
    
    private(set) var fetchedResultsController: NSFetchedResultsController<NSManagedObject>
@@ -21,12 +17,12 @@ class FetchedResultsController<T>: NSObject, NSFetchedResultsControllerDelegate 
       context.delete(object)
    }
    
-   init(context: NSManagedObjectContext = SceneDelegate.context) {
+   init(context: NSManagedObjectContext = SceneDelegate.context, predicate: NSPredicate? = nil, sorting: [NSSortDescriptor] = []) {
       self.context = context
       print("Creating FetchedResultsController for \(T.Type.self)")
-      let request = NSFetchRequest<T>(entityName: T.name) as! NSFetchRequest<NSManagedObject>
-      request.sortDescriptors = []
-      request.predicate = nil
+      let request = NSFetchRequest<T>(entityName: T.entity().name!) as! NSFetchRequest<NSManagedObject>
+      request.sortDescriptors = sorting
+      request.predicate = predicate
       
       fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
       

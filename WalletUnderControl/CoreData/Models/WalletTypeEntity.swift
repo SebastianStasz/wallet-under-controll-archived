@@ -22,9 +22,7 @@ public class WalletTypeEntity: NSManagedObject {
 
 // MARK: -- Static Properties
 
-extension WalletTypeEntity: CoreDataEntity {
-   static let name = "WalletTypeEntity"
-   
+extension WalletTypeEntity: GroupingEntity {
    static let sortByNameASC = NSSortDescriptor(keyPath: \WalletTypeEntity.name, ascending: true)
 }
 
@@ -32,11 +30,6 @@ extension WalletTypeEntity: CoreDataEntity {
 
 extension WalletTypeEntity {
 
-   static func fetchedResultsController(in context: NSManagedObjectContext = SceneDelegate.context) -> FetchedResultsController<WalletTypeEntity> {
-      let walletTypes = FetchedResultsController<WalletTypeEntity>(context: context)
-      return walletTypes
-   }
-   
    static func create(in context: NSManagedObjectContext, name: String) {
       let walletType = WalletTypeEntity(context: context)
       walletType.update(name: name)
@@ -91,7 +84,7 @@ extension WalletTypeEntity {
    static func createWalletType(context: NSManagedObjectContext) -> WalletTypeEntity {
       let walletType = WalletTypeEntity(context: context)
       walletType.name = "Getin Bank"
-      
+   
       return walletType
    }
 }

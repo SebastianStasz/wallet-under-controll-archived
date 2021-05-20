@@ -12,6 +12,7 @@ class WalletFormView: UIView {
    private var walletDetailsStackView: UIStackView!
    private var iconSettingsStackView: UIStackView!
    
+   private let textFieldPadding = UIEdgeInsets(top: 7, left: 12, bottom: 7, right: 12)
    var nameTextField: MainTextField!
    var balanceTextField: MainTextField!
    
@@ -48,28 +49,28 @@ extension WalletFormView {
       let iconHeaderLabel = getSectionHeaderLabel(with: "Icon")
       
       // Wallet Name Text Field
-      let nameTextField = textFieldFor(title: "Wallet Name", placeholder: "My Wallet")
-      let nameValidationLabel = getValidationMessageLabel()
+      let nameTextField = ViewComponents.mainTextField(title: "Wallet Name", placeholder: "My Wallet", padding: textFieldPadding)
+      let nameValidationLabel = ViewComponents.validationMessageLabel()
       let nameRowStackView = UIStackView(arrangedSubviews: [nameTextField, nameValidationLabel])
       nameRowStackView.axis = .vertical
       
       // Initial Balance Text Field
-      let balanceTextField = textFieldFor(title: "Initial Balance", placeholder: "1000")
-      let balanceValidationLabel = getValidationMessageLabel()
+      let balanceTextField = ViewComponents.mainTextField(title: "Initial Balance", placeholder: "1000", padding: textFieldPadding)
+      let balanceValidationLabel = ViewComponents.validationMessageLabel()
       let balanceRowStackView = UIStackView(arrangedSubviews: [balanceTextField, balanceValidationLabel])
       balanceTextField.keyboardType = .decimalPad
       balanceRowStackView.axis = .vertical
       
       // Currency Picker Row
       let currencyPicker = setupPickerRow(for: selectCurrencyBTN, withTitle: "Currency", valueLabel: selectedCurrencyLabel)
-      let currencyPickerValidationLabel = getValidationMessageLabel()
+      let currencyPickerValidationLabel = ViewComponents.validationMessageLabel()
       let currencyPickerRowStack = UIStackView(arrangedSubviews: [currencyPicker, currencyPickerValidationLabel])
       currencyPickerRowStack.axis = .vertical
       selectedCurrencyLabel.text = "------"
       
       // Wallet Type Picker Row
       let walletTypePicker = setupPickerRow(for: selectWalletTypeBTN, withTitle: "Wallet Type", valueLabel: selectedWalletTypeLabel)
-      let walletTypePickerValidationLabel = getValidationMessageLabel()
+      let walletTypePickerValidationLabel = ViewComponents.validationMessageLabel()
       let walletTypePickerRowStack = UIStackView(arrangedSubviews: [walletTypePicker, walletTypePickerValidationLabel])
       walletTypePickerRowStack.axis = .vertical
       selectedWalletTypeLabel.text = "------"
@@ -139,22 +140,6 @@ extension WalletFormView {
 
 extension WalletFormView {
    
-   private func textFieldFor(title: String, placeholder: String) -> MainTextField {
-      let textField = MainTextField()
-      let fieldLabel = UILabel()
-      
-      fieldLabel.text = "  \(title):  "
-      textField.leftView = fieldLabel
-      textField.leftViewMode = .always
-      textField.textAlignment = .right
-      textField.autocorrectionType = .no
-      textField.borderStyle = .roundedRect
-      textField.placeholder = placeholder
-      textField.backgroundColor = .tertiarySystemBackground
-      
-      return textField
-   }
-   
    private func setupPickerRow(for button: UIButton, withTitle title: String, valueLabel: UILabel) -> UIStackView {
       button.setTitle(title, for: .normal)
       button.setTitleColor(.systemBlue, for: .normal)
@@ -185,21 +170,11 @@ extension WalletFormView {
    }
    
    private func getSectionHeaderLabel(with text: String) -> UILabel {
-      let label = PaddingLabel()
+      let label = PaddingLabel(padding: UIEdgeInsets(top: 0, left: 10, bottom: 9, right: 9))
       label.text = text.uppercased()
       label.textColor = .systemGray
-      label.padding(0, 10, 0, 0)
       label.font = .systemFont(ofSize: 13)
       label.addCharacterSpacing(kernValue: 2)
-      
-      return label
-   }
-   
-   private func getValidationMessageLabel() -> PaddingLabel {
-      let label = PaddingLabel()
-      label.padding(5, 5, 5, 5)
-      label.textColor = .systemRed
-      label.font = .systemFont(ofSize: 15, weight: .light)
       
       return label
    }

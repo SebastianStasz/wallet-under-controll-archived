@@ -17,5 +17,14 @@ struct CashFlowTemplate {
 
 extension CashFlowTemplate {
    
+   init?(name: String?, date: Date, value: String?, wallet: WalletEntity, category: CashFlowCategoryEntity?) {
+      guard let name = name, let amount = Double(value ?? "X"), let category = category else { return nil }
+      
+      self.name = name
+      self.date = date
+      self.value = amount
+      self.wallet = wallet
+      self.category = category
+   }
 
 }

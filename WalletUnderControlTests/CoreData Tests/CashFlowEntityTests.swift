@@ -39,14 +39,16 @@ class CashFlowEntityTests: XCTestCase {
       CashFlowEntity.create(in: context, using: template)
       
       let cashFlow = fetchCashFlow().first!
-      let updatedName = "Updated Name"
-      let updatedDate = Date()
-      let updatedValue = 100.0
       
-      cashFlow.update(name: updatedName, date: updatedDate, value: updatedValue)
-      XCTAssertEqual(cashFlow.name, updatedName)
-      XCTAssertEqual(cashFlow.date, updatedDate)
-      XCTAssertEqual(cashFlow.value, updatedValue)
+      let updatedCategory = CashFlowCategoryEntity.createCashFlowCategories(context: context).first!
+      
+      let updatedTemplate = CashFlowTemplate(name: "Updated Name", date: Date(), value: 100, wallet: template.wallet, category: updatedCategory)
+      
+      cashFlow.update(using: updatedTemplate)
+      XCTAssertEqual(cashFlow.name, updatedTemplate.name)
+      XCTAssertEqual(cashFlow.date, updatedTemplate.date)
+      XCTAssertEqual(cashFlow.value, updatedTemplate.value)
+      XCTAssertEqual(cashFlow.category, updatedCategory)
    }
    
    func test_create_cash_flow_entity_with_invalid_name() throws {

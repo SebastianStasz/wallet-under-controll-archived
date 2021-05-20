@@ -56,21 +56,29 @@ class ValidationManagerTests: XCTestCase {
    // MARK: -- Currency Validation
    
    func test_validate_correct_currencies() throws {
-      let currencies = ["1", "10", "10.0", "10,0", "9,10", "9,95", "5.51", "001.01", "05", "0,1", "0.9", "0", "0,0", "0,00", "0.0", "0.00", "00,0", "00.0", "00,00", "00.00", "000.0"]
-      for currency in currencies {
-         let validation = validationManager.validateCurrency(currency)
-         XCTAssertEqual(validation, .isValid, "'\(currency)' should be valid.")
+      let values = ["1", "10", "10.0", "10,0", "9,10", "9,95", "5.51", "001.01", "05", "0,1", "0.9", "0", "0,0", "0,00", "0.0", "0.00", "00,0", "00.0", "00,00", "00.00", "000.0"]
+      for value in values {
+         let validation = validationManager.validateCurrency(value)
+         XCTAssertEqual(validation, .isValid, "'\(value)' should be valid.")
          
-         let cur = currency.replacingOccurrences(of: ",", with: ".")
+         let cur = value.replacingOccurrences(of: ",", with: ".")
          XCTAssertNotNil(Double(cur), "'\(cur)' should be possible to transfer to Double.")
       }
    }
    
    func test_validate_incorrect_currencies() throws {
-      let currencies = ["0.000", "0,000", ".", ",", "0..0", "0,,0", "1.,1", "12.0.", "12,1,", "12.", "15,"]
-      for currency in currencies {
-         let validation = validationManager.validateCurrency(currency)
-         XCTAssertEqual(validation, .isInvalid, "'\(currency)' should be invalid.")
+      let values = ["0.000", "0,000", ".", ",", "0..0", "0,,0", "1.,1", "12.0.", "12,1,", "12.", "15,"]
+      for value in values {
+         let validation = validationManager.validateCurrency(value)
+         XCTAssertEqual(validation, .isInvalid, "'\(value)' should be invalid.")
+      }
+   }
+   
+   func test_validate_equal_to_zero_values() throws {
+      let values = ["0.00", "0,00", "0", "00.00", "00,00", "00,0", "00.0"]
+      for value in values {
+         let validation = validationManager.validateCurrency(value, canEqualZero: false)
+         XCTAssertEqual(validation, .isZero, "'\(value)' should be 'isZero'.")
       }
    }
    
@@ -79,3 +87,4 @@ class ValidationManagerTests: XCTestCase {
       XCTAssertEqual(validation, .isEmpty, "Result of empty string should be 'isEmpty'.")
    }
 }
+

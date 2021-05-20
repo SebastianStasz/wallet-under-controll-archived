@@ -9,7 +9,13 @@ import Foundation
 
 protocol ValidationService {
    func validateName(_ text: String, usedNames: [String]) -> NameValidation
-   func validateCurrency(_ text: String) -> BalanceValidation
+   func validateCurrency(_ text: String, canEqualZero: Bool) -> BalanceValidation
+}
+
+extension ValidationService {
+   func validateCurrency(_ text: String, canEqualZero: Bool = true) -> BalanceValidation {
+      validateCurrency(text, canEqualZero: canEqualZero)
+   }
 }
 
 enum NameValidation {
@@ -38,17 +44,20 @@ enum NameValidation {
    }
 }
 
-enum BalanceValidation {
+enum BalanceValidation: Equatable {
    case isEmpty
+   case isZero
    case isInvalid
    case isValid
    
-   var message: String? {
+   func message(fieldName: String = "Value") -> String? {
       switch self {
       case .isEmpty:
-         return "Value can not be empty."
+         return "\(fieldName) can not be empty."
+      case .isZero:
+         return "\(fieldName) can not equal 0."
       case .isInvalid:
-         return "Value is invalid."
+         return "\(fieldName) is invalid."
       case .isValid:
          return nil
       }

@@ -12,7 +12,7 @@ class WalletTypeListVC: UIViewController {
    private let picker: Picker?
    private let walletTypes: FetchedResultsController<WalletTypeEntity>
    private let context: NSManagedObjectContext
-   private var walletTypeAlert: WalletTypeAlert? = nil
+   private var walletTypeAlert: GroupingEntityAlert<WalletTypeEntity>? = nil
    
    private let walletTypeListView = WalletTypeListView()
    private var walletTypesTBV: UITableView { walletTypeListView.walletTypesTBV }
@@ -64,8 +64,8 @@ extension WalletTypeListVC {
       let walletType = walletTypes.fetchedResultsController.object(at: indexPath) as! WalletTypeEntity
       
       let config = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
-         let deleteBTN = UIAction.deleteAction { [unowned self] in deleteWalletType(walletType) }
-         let editBTN = UIAction.editAction { [unowned self] in showWalletTypeAlert(edit: walletType) }
+         let deleteBTN = UIAction.delete { [unowned self] in deleteWalletType(walletType) }
+         let editBTN = UIAction.edit { [unowned self] in showWalletTypeAlert(edit: walletType) }
          return UIMenu(title: walletType.name, children: [editBTN, deleteBTN])
       }
       
@@ -79,7 +79,7 @@ extension WalletTypeListVC {
    private func showWalletTypeAlert(edit walletType: WalletTypeEntity?) {
       let walletTypes = walletTypes.fetchedResultsController.fetchedObjects as! [WalletTypeEntity]
       let usedNames = walletTypes.map { $0.name }
-      walletTypeAlert = WalletTypeAlert(editing: walletType, usedNames: usedNames)
+      walletTypeAlert = GroupingEntityAlert(editing: walletType, usedNames: usedNames)
       walletTypeListView.addTypeBTN.zoomIn()
 
       present(walletTypeAlert!.alertController, animated: true)
@@ -98,7 +98,7 @@ extension WalletTypeListVC {
    
    private func showOperationNotAllowedAlert(for walletType: WalletTypeEntity) {
       let alert = UIAlertController(title: "Not allowed", message: "\"\(walletType.name)\" is currently used.", preferredStyle: .alert)
-      alert.addAction(.cancelAction)
+      alert.addAction(.cancel)
       present(alert, animated: true)
    }
 }

@@ -23,7 +23,12 @@ extension UITextField {
 
 class MainTextField: UITextField {
    
-   let padding = UIEdgeInsets(top: 7, left: 12, bottom: 7, right: 12)
+   private let padding: UIEdgeInsets
+   
+   init(padding: UIEdgeInsets) {
+      self.padding = padding
+      super.init(frame: .zero)
+   }
    
    override open func textRect(forBounds bounds: CGRect) -> CGRect {
       return bounds.inset(by: padding)
@@ -35,5 +40,9 @@ class MainTextField: UITextField {
    
    override open func editingRect(forBounds bounds: CGRect) -> CGRect {
       return bounds.inset(by: padding)
+   }
+   
+   required init?(coder: NSCoder) {
+      fatalError("init(coder:) has not been implemented")
    }
 }
