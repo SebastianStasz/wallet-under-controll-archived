@@ -60,6 +60,48 @@ class CashFlowEntityTests: XCTestCase {
       XCTAssertEqual(cashFlow.name, "Te st Name", "Trailing, leading spaces and new lines should be deleted.")
    }
    
+   // MARK: -- Tests: changing wallet available balance when creating & updating cash-flows
+   
+   func test_updating_wallet_balance_when_creating_and_updating_income() throws {
+      let wallet = WalletEntity.createWallet(context: context, initialBalance: 0)
+      let category = CashFlowCategoryEntity.createCashFlowCategory(type: .income, context: context)
+      let template = CashFlowTemplate(name: name, date: Date(), value: 10, wallet: wallet, category: category)
+      CashFlowEntity.create(in: context, using: template)
+      let cashFlow = fetchCashFlow().first!
+      
+      XCTAssertEqual(wallet.availableBalance, 10, "Initial balance: 0 + new income: 10 should be equal: 10")
+      
+      let updatedTemplate1 = CashFlowTemplate(name: name, date: Date(), value: 5, wallet: wallet, category: category)
+      cashFlow.update(using: updatedTemplate1)
+      
+      XCTAssertEqual(wallet.availableBalance, 5, "Initial balance: 0 + updated income: 5 should be equal: 5")
+      
+      let updatedTemplate2 = CashFlowTemplate(name: name, date: Date(), value: 15, wallet: wallet, category: category)
+      cashFlow.update(using: updatedTemplate2)
+      
+      XCTAssertEqual(wallet.availableBalance, 15, "Initial balance: 0 + updated income: 15 should be equal: 15")
+   }
+   
+   func test_updating_wallet_balance_when_creating_and_updating_expense() throws {
+      let wallet = WalletEntity.createWallet(context: context, initialBalance: 0)
+      let category = CashFlowCategoryEntity.createCashFlowCategory(type: .expense, context: context)
+      let template = CashFlowTemplate(name: name, date: Date(), value: 10, wallet: wallet, category: category)
+      CashFlowEntity.create(in: context, using: template)
+      let cashFlow = fetchCashFlow().first!
+      
+      XCTAssertEqual(wallet.availableBalance, -10, "Initial balance: 0 + new expense: 10 should be equal: -10")
+      
+      let updatedTemplate1 = CashFlowTemplate(name: name, date: Date(), value: 5, wallet: wallet, category: category)
+      cashFlow.update(using: updatedTemplate1)
+      
+      XCTAssertEqual(wallet.availableBalance, -5, "Initial balance: 0 + updated expense: 5 should be equal: -5")
+      
+      let updatedTemplate2 = CashFlowTemplate(name: name, date: Date(), value: 15, wallet: wallet, category: category)
+      cashFlow.update(using: updatedTemplate2)
+      
+      XCTAssertEqual(wallet.availableBalance, -15, "Initial balance: 0 + updated expense: 15 should be equal: -15")
+   }
+   
    // MARK: Predicate Tests
    
    func test_cash_flow_predicate_date_and_type() throws {

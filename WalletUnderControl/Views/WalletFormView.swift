@@ -181,14 +181,17 @@ extension WalletFormView {
 }
 
 extension WalletFormView {
+   
    func setupForEditing(_ wallet: WalletEntity) {
       nameTextField.insertText(wallet.name)
       balanceTextField.insertText(String(wallet.initialBalance))
-      balanceTextField.isEnabled = false
-      balanceTextField.alpha = 0.5
       selectedCurrencyLabel.text = wallet.currency.code
       selectedWalletTypeLabel.text = wallet.type.name
       submitButton.setTitle("Update", for: .normal)
+      
+      balanceTextField.alpha = 0.5
+      balanceTextField.isEnabled = false
+      selectCurrencyBTN.isEnabled = false
    }
 }
 

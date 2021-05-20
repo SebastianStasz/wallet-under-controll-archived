@@ -37,7 +37,7 @@ class GroupingEntityAlert<T: GroupingEntity> {
       self.validationManager = validationManager
       
       let action = groupingItem == nil ? "Create" : "Edit"
-      let title = cashFlowType == nil ? "Wallet Type" : "\(cashFlowType!.name()) Category"
+      let title = cashFlowType == nil ? "Wallet Type" : "\(cashFlowType!.name) Category"
       
       alertController = UIAlertController(title: "\(action) \(title)", message: nil, preferredStyle: .alert)
       setupAlertController()
@@ -49,7 +49,11 @@ class GroupingEntityAlert<T: GroupingEntity> {
 extension GroupingEntityAlert {
    private func setupAlertController() {
       
-      alertController.addTextField()
+      alertController.addTextField() { [unowned self] textField in
+         let action = UIAction() { _ in alertController.dismiss(animated: true) }
+         textField.addDoneButtonToKeyboard(action: action)
+      }
+      
       var submitBtnTitle = "Add"
       
       if let groupingItem = groupingItem {

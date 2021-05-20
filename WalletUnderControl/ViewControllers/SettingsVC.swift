@@ -25,8 +25,8 @@ class SettingsVC: UIViewController {
       sections = [
          .init(title: "Categories", options: [
             .init(title: "Wallet Types") { [unowned self] in presentVC(GroupingEntityListVC<WalletTypeEntity>()) },
-            .init(title: "Incomes") { [unowned self] in presentVC(GroupingEntityListVC<CashFlowCategoryEntity>(for: .income)) },
-            .init(title: "Expenses") { [unowned self] in presentVC(GroupingEntityListVC<CashFlowCategoryEntity>(for: .expense)) },
+            .init(title: "Income Categories") { [unowned self] in presentVC(GroupingEntityListVC<CashFlowCategoryEntity>(for: .income)) },
+            .init(title: "Expense Catogories") { [unowned self] in presentVC(GroupingEntityListVC<CashFlowCategoryEntity>(for: .expense)) },
          ]),
          .init(title: "Currencies", options: [
             

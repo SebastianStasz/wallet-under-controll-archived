@@ -38,7 +38,7 @@ class GroupingEntityListVC<T: GroupingEntity>: UIViewController, UITableViewDele
       tableView.dataSource = self
       groupingEntities.fetchedResultsController.delegate = self
       
-      let listTitle = cashFlowType?.name(plural: true) ?? "Wallet Types"
+      let listTitle = cashFlowType == nil ? "Wallet Types" : "\(cashFlowType!.name) Categories"
       title = picker == nil ? listTitle : "Select Type"
       navigationController?.navigationBar.prefersLargeTitles = true
 

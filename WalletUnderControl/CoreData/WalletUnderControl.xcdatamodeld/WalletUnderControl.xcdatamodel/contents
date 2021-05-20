@@ -25,6 +25,7 @@
         <relationship name="base" maxCount="1" deletionRule="Nullify" destinationEntity="CurrencyEntity" inverseName="exchangeRates" inverseEntity="CurrencyEntity"/>
     </entity>
     <entity name="WalletEntity" representedClassName="WalletEntity" syncable="YES">
+        <attribute name="availableBalance" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="creationDate" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="icon_" attributeType="Integer 16" usesScalarValueType="YES"/>
         <attribute name="iconColor_" attributeType="Integer 16" usesScalarValueType="YES"/>
@@ -40,11 +41,11 @@
         <relationship name="wallets" toMany="YES" deletionRule="Nullify" destinationEntity="WalletEntity" inverseName="type" inverseEntity="WalletEntity"/>
     </entity>
     <elements>
+        <element name="CashFlowCategoryEntity" positionX="288.1544799804688" positionY="-15.49285888671875" width="128" height="88"/>
+        <element name="CashFlowEntity" positionX="122.1953125" positionY="-11.13650512695312" width="128" height="118"/>
         <element name="CurrencyEntity" positionX="-250.8958129882812" positionY="30.99566650390625" width="128" height="118"/>
         <element name="ExchangeRateEntity" positionX="-443.0656127929688" positionY="27.59307861328125" width="128" height="88"/>
-        <element name="WalletEntity" positionX="-66.55804443359375" positionY="34.95089721679688" width="128" height="178"/>
+        <element name="WalletEntity" positionX="-66.55804443359375" positionY="34.95089721679688" width="128" height="193"/>
         <element name="WalletTypeEntity" positionX="132.5834350585938" positionY="178.4329223632812" width="128" height="73"/>
-        <element name="CashFlowEntity" positionX="122.1953125" positionY="-11.13650512695312" width="128" height="118"/>
-        <element name="CashFlowCategoryEntity" positionX="288.1544799804688" positionY="-15.49285888671875" width="128" height="88"/>
     </elements>
 </model>

@@ -31,7 +31,7 @@ class WalletCell: UITableViewCell {
       walletTypeLabel.text = wallet.type.name
       walletIconIV.tintColor = wallet.iconColor.color
       walletIconIV.image = UIImage(systemName: wallet.icon.name)
-      walletBalanceLabel.attributedText = getBalanceText(for: 200)
+      walletBalanceLabel.attributedText = getBalanceText(for: wallet)
    }
    
    private func setupViews() {
@@ -97,12 +97,14 @@ class WalletCell: UITableViewCell {
 
 extension WalletCell {
    
-   private func getBalanceText(for amount: Double) -> NSMutableAttributedString {
+   private func getBalanceText(for wallet: WalletEntity) -> NSMutableAttributedString {
       let attr1 = [NSAttributedString.Key.foregroundColor : FontManager.Color.main]
       let attr2 = [NSAttributedString.Key.foregroundColor : UIColor.systemGreen]
-      let ballanceText = NSMutableAttributedString(string:"Available Balance: ", attributes: attr1)
-      ballanceText.append(NSMutableAttributedString(string:"200 PLN", attributes: attr2))
       
-      return ballanceText
+      let balanceLabel = NSMutableAttributedString(string:"Balance: ", attributes: attr1)
+      let balanceText = wallet.availableBalance.toCurrency(wallet.currency.code)
+      
+      balanceLabel.append(NSMutableAttributedString(string: balanceText, attributes: attr2))
+      return balanceLabel
    }
 }

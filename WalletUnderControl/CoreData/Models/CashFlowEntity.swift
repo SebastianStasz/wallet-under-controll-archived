@@ -13,9 +13,9 @@ import CoreData
 public class CashFlowEntity: NSManagedObject {
    
    @nonobjc public class func createFetchRequest() -> NSFetchRequest<CashFlowEntity> {
-       return NSFetchRequest<CashFlowEntity>(entityName: "CashFlowEntity")
+      return NSFetchRequest<CashFlowEntity>(entityName: "CashFlowEntity")
    }
-
+   
    @NSManaged private(set) var name: String
    @NSManaged private(set) var date: Date
    @NSManaged private(set) var value: Double
@@ -26,10 +26,10 @@ public class CashFlowEntity: NSManagedObject {
 // MARK: -- Static Properties
 
 extension CashFlowEntity {
-
+   
    static let sortByDateASC = NSSortDescriptor(keyPath: \CashFlowEntity.date, ascending: true)
    static let sortByDateDESC = NSSortDescriptor(keyPath: \CashFlowEntity.date, ascending: false)
-
+   
 }
 
 // MARK: -- Methods
@@ -49,10 +49,17 @@ extension CashFlowEntity {
    static func create(in context: NSManagedObjectContext, using template: CashFlowTemplate) {
       let cashFlow = CashFlowEntity(context: context)
       cashFlow.wallet = template.wallet
+      cashFlow.category = template.category
       cashFlow.update(using: template)
    }
    
    func update(using template: CashFlowTemplate) {
+      assert(template.category.type == self.category.type, "It should NOT be possible to change cash-flow type, e.g. 'expense' to 'income'.")
+      
+      let isExpense = template.category.type == .expense
+      wallet.increaseBalance(by: isExpense ? self.value : template.value )
+      wallet.decreaseBalance(by: isExpense ? template.value : self.value)
+      
       let name = template.name.trimmingCharacters(in: .whitespacesAndNewlines)
       
       self.name = name

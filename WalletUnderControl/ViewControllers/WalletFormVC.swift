@@ -47,6 +47,20 @@ class WalletFormVC: UIViewController {
       walletFormView.pickerView.delegate = self
       walletFormView.pickerView.dataSource = self
       
+      walletFormView.nameTextField.delegate = self
+      walletFormView.balanceTextField.delegate = self
+      
+      let dismissAction = UIAction() { [unowned self] action in
+         walletFormView.nameTextField.resignFirstResponder()
+         walletFormView.balanceTextField.resignFirstResponder()
+      }
+      
+      walletFormView.nameTextField.addDoneButtonToKeyboard(action: dismissAction)
+      walletFormView.balanceTextField.addDoneButtonToKeyboard(action: dismissAction)
+      walletFormView.nameTextField.becomeFirstResponder()
+      walletFormView.nameTextField.tag = 0
+      walletFormView.balanceTextField.tag = 1
+      
       startFormValidation()
       setupUserInteractions()
       
@@ -209,6 +223,20 @@ extension WalletFormVC: UIPickerViewDelegate, UIPickerViewDataSource {
       if isIcon { form.icon = WalletIcon.allCases[row] }
       else { form.iconColor = IconColor.allCases[row] }
       pickerView.reloadAllComponents()
+   }
+}
+
+// MARK: -- UITextField Delegate
+
+extension WalletFormVC: UITextFieldDelegate {
+   
+   func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+      if let nextField = walletFormView.viewWithTag(textField.tag + 1) as? MainTextField {
+         nextField.becomeFirstResponder()
+      } else {
+         textField.resignFirstResponder()
+      }
+      return false
    }
 }
 

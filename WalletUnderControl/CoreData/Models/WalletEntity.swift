@@ -23,6 +23,7 @@ public class WalletEntity: NSManagedObject {
    @NSManaged private(set) var name: String
    @NSManaged private(set) var creationDate: Date
    @NSManaged private(set) var initialBalance: Double
+   @NSManaged private(set) var availableBalance: Double
    @NSManaged private(set) var type: WalletTypeEntity
    @NSManaged private(set) var currency: CurrencyEntity
    @NSManaged private(set) var cashFlows: [CashFlowEntity]
@@ -53,6 +54,7 @@ extension WalletEntity {
       wallet.id = UUID()
       wallet.creationDate = Date()
       wallet.initialBalance = template.initialBalance
+      wallet.availableBalance = template.initialBalance
       wallet.update(using: template)
    }
    
@@ -64,6 +66,14 @@ extension WalletEntity {
       iconColor = template.iconColor
       type = template.type
       currency = template.currency
+   }
+   
+   func increaseBalance(by value: Double) {
+      self.availableBalance += value
+   }
+   
+   func decreaseBalance(by value: Double) {
+      self.availableBalance -= value
    }
 }
 
@@ -110,6 +120,7 @@ extension WalletEntity {
          wallet.icon = icons[i]
          wallet.iconColor = iconColor[i]
          wallet.initialBalance = initialBalances[i]
+         wallet.availableBalance = initialBalances[i]
          wallet.type = walletTypes.randomElement()!
          wallet.currency = currencies.randomElement()!
          
@@ -119,7 +130,7 @@ extension WalletEntity {
       return wallets
    }
    
-   static func createWallet(context: NSManagedObjectContext) -> WalletEntity {
+   static func createWallet(context: NSManagedObjectContext, initialBalance: Double = 200) -> WalletEntity {
       let currencies = CurrencyEntity.createCurrencies(context: context)
       let walletType = WalletTypeEntity.createWalletType(context: context)
       
@@ -129,7 +140,8 @@ extension WalletEntity {
       wallet.name = "Savings"
       wallet.icon = .banknoteFill
       wallet.iconColor = .blue1
-      wallet.initialBalance = 200
+      wallet.initialBalance = initialBalance
+      wallet.availableBalance = initialBalance
       wallet.type = walletType
       wallet.currency = currencies.randomElement()!
       

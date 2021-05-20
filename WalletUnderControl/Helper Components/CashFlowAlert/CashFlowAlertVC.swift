@@ -62,9 +62,22 @@ class CashFlowAlertVC: UIViewController {
    
    override func viewDidLoad() {
       super.viewDidLoad() ; setupView()
-      categoryPicker.delegate = self
-      categoryPicker.dataSource = self
       cashFlowController.fetchedResultsController.delegate = self
+      categoryPicker.dataSource = self
+      categoryPicker.delegate = self
+      nameTextField.delegate = self
+      amountTextField.delegate = self
+      
+      nameTextField.tag = 0
+      amountTextField.tag = 1
+      
+      let action = UIAction() { [unowned self] _ in
+         nameTextField.resignFirstResponder()
+         amountTextField.resignFirstResponder()
+      }
+      
+      nameTextField.addDoneButtonToKeyboard(action: action)
+      amountTextField.addDoneButtonToKeyboard(action: action)
       
       Publishers.CombineLatest3(nameValidation, amountValidation, $selectedCategory)
          .map { $0 && $1 && $2 != nil}
@@ -89,9 +102,9 @@ extension CashFlowAlertVC {
       datePicker.datePickerMode = .date
       
       // Name Text Field
-      nameTextField = ViewComponents.mainTextField(title: "Name", placeholder: cashFlowType.name(), padding: textFieldPadding)
+      nameTextField = ViewComponents.mainTextField(title: "Name", placeholder: cashFlowType.name, padding: textFieldPadding)
       let nameRowStackView = UIStackView(arrangedSubviews: [nameTextField, nameValidationLabel])
-      nameTextField.keyboardType = .decimalPad
+      nameTextField.becomeFirstResponder()
       nameRowStackView.axis = .vertical
       
       // Amount Text Field
@@ -101,7 +114,7 @@ extension CashFlowAlertVC {
       amountRowStackView.axis = .vertical
       
       // Category Picker
-      categoryValidationLabel.text = "No \(cashFlowType.name().lowercased()) categories, create one first."
+      categoryValidationLabel.text = "No \(cashFlowType.name.lowercased()) categories, create one first."
       setCategoryPickerVisibility()
       
       // Add Category Button
@@ -137,7 +150,7 @@ extension CashFlowAlertVC {
 // MARK: -- Category Picker Configuration
 
 extension CashFlowAlertVC: UIPickerViewDelegate, UIPickerViewDataSource {
-
+   
    func numberOfComponents(in pickerView: UIPickerView) -> Int { 1 }
    
    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
@@ -150,10 +163,10 @@ extension CashFlowAlertVC: UIPickerViewDelegate, UIPickerViewDataSource {
       label.text = cashFlowCategories[row].name
       label.font = .systemFont(ofSize: 21)
       label.textAlignment = .center
-
+      
       return label
    }
-
+   
    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
       guard !cashFlowCategories.isEmpty else { return }
       selectedCategory = cashFlowCategories[row]
@@ -172,6 +185,20 @@ extension CashFlowAlertVC: NSFetchedResultsControllerDelegate {
          categoryPicker.reloadAllComponents()
       default: break
       }
+   }
+}
+
+// MARK: -- UITextField Delegate
+
+extension CashFlowAlertVC: UITextFieldDelegate {
+   
+   func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+      if let nextField = view.viewWithTag(textField.tag + 1) as? MainTextField {
+         nextField.becomeFirstResponder()
+      } else {
+         textField.resignFirstResponder()
+      }
+      return false
    }
 }
 
@@ -201,7 +228,7 @@ extension CashFlowAlertVC {
    
    func submitAlertAction() {
       guard let template = getCashFlowTemplate() else { return }
-
+      
       if let cashFlow = cashFlow {
          cashFlow.update(using: template)
       } else {
@@ -220,7 +247,7 @@ extension CashFlowAlertVC {
          .map { [unowned self] text in
             let result = validationManager.validateName(text, usedNames: [])
             nameValidationLabel.text = result.message
-
+            
             return result == .isValid
          }
          .eraseToAnyPublisher()

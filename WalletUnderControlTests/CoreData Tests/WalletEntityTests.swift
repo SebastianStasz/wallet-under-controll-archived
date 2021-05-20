@@ -43,6 +43,7 @@ class WalletEntityTests: XCTestCase {
       XCTAssertEqual(createdWallet.currency, template.currency)
       XCTAssertEqual(createdWallet.iconColor, template.iconColor)
       XCTAssertEqual(createdWallet.initialBalance, template.initialBalance)
+      XCTAssertEqual(createdWallet.availableBalance, template.initialBalance)
    }
    
    func test_create_wallet_entity_with_invalid_name() throws {
