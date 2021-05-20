@@ -37,7 +37,7 @@ class GroupingEntityAlert<T: GroupingEntity> {
       self.validationManager = validationManager
       
       let action = groupingItem == nil ? "Create" : "Edit"
-      let title = cashFlowType == nil ? "Wallet Type" : "\(cashFlowType!.name) Category"
+      let title = cashFlowType == nil ? "Wallet Type" : "\(cashFlowType!.name()) Category"
       
       alertController = UIAlertController(title: "\(action) \(title)", message: nil, preferredStyle: .alert)
       setupAlertController()
@@ -103,16 +103,16 @@ extension GroupingEntityAlert {
    convenience init(editing walletType: WalletTypeEntity?,
                     validationManager: ValidationService = ValidationManager(),
                     context: NSManagedObjectContext = SceneDelegate.context,
-                    usedNames: [String]) where T == WalletTypeEntity
+                    usedNames: [String])
    {
-      self.init(editing: walletType, cashFlowType: nil, validationManager: validationManager, context: context, usedNames: usedNames)
+      self.init(editing: walletType as? T, cashFlowType: nil, validationManager: validationManager, context: context, usedNames: usedNames)
    }
    
    // Allert for creating Cash Flow Category.
    convenience init(cashFlowType: CashFlowType,
                     validationManager: ValidationService = ValidationManager(),
                     context: NSManagedObjectContext = SceneDelegate.context,
-                    usedNames: [String]) where T == CashFlowCategoryEntity
+                    usedNames: [String])
    {
       self.init(editing: nil, cashFlowType: cashFlowType, validationManager: validationManager, context: context, usedNames: usedNames)
    }
@@ -121,9 +121,9 @@ extension GroupingEntityAlert {
    convenience init(editing cashFlowCategory: CashFlowCategoryEntity,
                     validationManager: ValidationService = ValidationManager(),
                     context: NSManagedObjectContext = SceneDelegate.context,
-                    usedNames: [String]) where T == CashFlowCategoryEntity
+                    usedNames: [String])
    {
-      self.init(editing: cashFlowCategory, cashFlowType: cashFlowCategory.type, validationManager: validationManager, context: context, usedNames: usedNames)
+      self.init(editing: cashFlowCategory as? T, cashFlowType: cashFlowCategory.type, validationManager: validationManager, context: context, usedNames: usedNames)
    }
 }
 

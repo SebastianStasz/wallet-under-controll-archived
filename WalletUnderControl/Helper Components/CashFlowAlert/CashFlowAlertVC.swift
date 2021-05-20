@@ -89,7 +89,7 @@ extension CashFlowAlertVC {
       datePicker.datePickerMode = .date
       
       // Name Text Field
-      nameTextField = ViewComponents.mainTextField(title: "Name", placeholder: cashFlowType.name, padding: textFieldPadding)
+      nameTextField = ViewComponents.mainTextField(title: "Name", placeholder: cashFlowType.name(), padding: textFieldPadding)
       let nameRowStackView = UIStackView(arrangedSubviews: [nameTextField, nameValidationLabel])
       nameTextField.keyboardType = .decimalPad
       nameRowStackView.axis = .vertical
@@ -101,7 +101,7 @@ extension CashFlowAlertVC {
       amountRowStackView.axis = .vertical
       
       // Category Picker
-      categoryValidationLabel.text = "No \(cashFlowType.name.lowercased()) categories, create one first."
+      categoryValidationLabel.text = "No \(cashFlowType.name().lowercased()) categories, create one first."
       setCategoryPickerVisibility()
       
       // Add Category Button

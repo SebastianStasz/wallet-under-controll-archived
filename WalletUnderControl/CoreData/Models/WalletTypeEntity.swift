@@ -20,16 +20,10 @@ public class WalletTypeEntity: NSManagedObject {
     @NSManaged private(set) var wallets: [WalletEntity]
 }
 
-// MARK: -- Static Properties
-
-extension WalletTypeEntity: GroupingEntity {
-   static let sortByNameASC = NSSortDescriptor(keyPath: \WalletTypeEntity.name, ascending: true)
-}
-
-// MARK: -- Methods
-
 extension WalletTypeEntity {
 
+   static let sortByNameASC = NSSortDescriptor(keyPath: \WalletTypeEntity.name, ascending: true)
+   
    static func create(in context: NSManagedObjectContext, name: String) {
       let walletType = WalletTypeEntity(context: context)
       walletType.update(name: name)
@@ -39,7 +33,14 @@ extension WalletTypeEntity {
       let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
       self.name = name
    }
+   
+   func canBeDeleted() -> Bool {
+      self.wallets.isEmpty
+   }
 }
+
+extension WalletTypeEntity: Identifiable {}
+extension WalletTypeEntity: GroupingEntity{}
 
 // MARK: -- Generated accessors for wallets
 
@@ -56,10 +57,6 @@ extension WalletTypeEntity {
 
     @objc(removeWallets:)
     @NSManaged public func removeFromWallets(_ values: NSSet)
-
-}
-
-extension WalletTypeEntity : Identifiable {
 
 }
 

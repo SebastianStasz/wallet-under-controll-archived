@@ -26,8 +26,6 @@ public class CashFlowCategoryEntity: NSManagedObject {
    }
 }
 
-// MARK: -- Static Properties
-
 extension CashFlowCategoryEntity {
    
    static let sortByNameASC = NSSortDescriptor(keyPath: \CashFlowCategoryEntity.name, ascending: true)
@@ -35,13 +33,6 @@ extension CashFlowCategoryEntity {
    static func filterByType(_ type: CashFlowType) -> NSPredicate {
       NSPredicate(format: "type_ == \(type.rawValue)")
    }
-}
-
-// MARK: -- Methods
-
-extension CashFlowCategoryEntity: GroupingEntity {
-   
-   static let name = "CashFlowCategoryEntity"
    
    static func create(in context: NSManagedObjectContext, name: String, type: CashFlowType) {
       let category = CashFlowCategoryEntity(context: context)
@@ -53,7 +44,14 @@ extension CashFlowCategoryEntity: GroupingEntity {
       let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
       self.name = name
    }
+   
+   func canBeDeleted() -> Bool {
+      self.cashFlows.isEmpty
+   }
 }
+
+extension CashFlowCategoryEntity: Identifiable {}
+extension CashFlowCategoryEntity: GroupingEntity{}
 
 // MARK: -- Generated accessors for cashFlows
 
@@ -72,8 +70,6 @@ extension CashFlowCategoryEntity {
    @NSManaged public func removeFromCashFlows(_ values: NSSet)
    
 }
-
-extension CashFlowCategoryEntity: Identifiable { }
 
 
 // MARK: -- Sample Data

@@ -10,5 +10,7 @@ import Foundation
 
 protocol GroupingEntity: NSManagedObject {
    var name: String { get }
+   
    func update(name: String) -> Void
+   func canBeDeleted() -> Bool
 }

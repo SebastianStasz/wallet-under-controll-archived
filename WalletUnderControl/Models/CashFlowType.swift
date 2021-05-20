@@ -11,10 +11,10 @@ enum CashFlowType: Int16 {
    case income
    case expense
    
-   var name: String {
+   func name(plural: Bool = false) -> String {
       switch self {
-      case .income: return "Income"
-      case .expense:return "Expense"
+      case .income: return plural ? "Incomes" : "Income"
+      case .expense:return plural ? "Expenses" : "Expense"
       }
    }
 }

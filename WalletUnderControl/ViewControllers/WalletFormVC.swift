@@ -152,12 +152,12 @@ extension WalletFormVC {
       }
       
       let selectWalletType = UIAction() { [unowned self] _ in
-         let picker = WalletTypeListVC.Picker(title: "Select Type", selectedType: form.walletType) { walletType in
+         let picker = GroupingEntityListVC<WalletTypeEntity>.Picker(title: "Select Type", selectedType: form.walletType) { walletType in
             walletFormView.selectedWalletTypeLabel.text = walletType.name
             form.walletType = walletType
          }
          
-         let currencyListVC = WalletTypeListVC(picker: picker, walletTypes: walletTypes, context: context)
+         let currencyListVC = GroupingEntityListVC(picker: picker, context: context)
          navigationController?.pushViewController(currencyListVC, animated: true)
       }
       

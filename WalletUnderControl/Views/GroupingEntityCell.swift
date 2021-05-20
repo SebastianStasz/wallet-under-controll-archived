@@ -1,5 +1,5 @@
 //
-//  WalletTypeCell.swift
+//  GroupingEntityCell.swift
 //  WalletUnderControl
 //
 //  Created by Sebastian Staszczyk on 12/05/2021.
@@ -7,14 +7,12 @@
 
 import UIKit
 
-class WalletTypeCell: UITableViewCell {
-   static let id = "WalletTypeCell"
-   static let height: CGFloat = 45
+class GroupingEntityCell<T: GroupingEntity>: UITableViewCell {
    
    private let nameLabel = UILabel()
    
-   func configure(with walletType: WalletTypeEntity, isSelected: Bool = false) {
-      nameLabel.text = walletType.name
+   func configure(with item: T, isSelected: Bool = false) {
+      nameLabel.text = item.name
       if isSelected { accessoryType = .checkmark }
    }
    
