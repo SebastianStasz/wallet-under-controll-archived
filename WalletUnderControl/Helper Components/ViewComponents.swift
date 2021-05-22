@@ -11,8 +11,8 @@ struct ViewComponents {
    
    static func validationMessageLabel() -> PaddingLabel {
       let label = PaddingLabel(padding: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
-      label.textColor = .systemRed
-      label.font = .systemFont(ofSize: 15, weight: .light)
+      label.textColor = Typography.Color.validationRed
+      label.font = Typography.validationMessage
       label.lineBreakMode = .byWordWrapping
       label.numberOfLines = .zero
       

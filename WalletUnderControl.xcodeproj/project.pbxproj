@@ -35,6 +35,7 @@
 		9E1D41C52653183C0086B45E /* CashFlowTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1D41C42653183C0086B45E /* CashFlowTemplate.swift */; };
 		9E1D41C926531ABE0086B45E /* CashFlowEntityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1D41C826531ABE0086B45E /* CashFlowEntityTests.swift */; };
 		9E26DC3C264FC982005F9C3B /* ValidationManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E26DC3B264FC982005F9C3B /* ValidationManagerMock.swift */; };
+		9E360DC82658603200A5FF41 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E360DC72658603200A5FF41 /* Typography.swift */; };
 		9E3E7C42264EB3AC00F52B2B /* ValidationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3E7C41264EB3AC00F52B2B /* ValidationService.swift */; };
 		9E3E7C44264EF2E200F52B2B /* ValidationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3E7C43264EF2E200F52B2B /* ValidationManager.swift */; };
 		9E4052062649616500410C58 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4052052649616500410C58 /* SettingsSection.swift */; };
@@ -114,6 +115,7 @@
 		9E1D41C42653183C0086B45E /* CashFlowTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashFlowTemplate.swift; sourceTree = "<group>"; };
 		9E1D41C826531ABE0086B45E /* CashFlowEntityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashFlowEntityTests.swift; sourceTree = "<group>"; };
 		9E26DC3B264FC982005F9C3B /* ValidationManagerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationManagerMock.swift; sourceTree = "<group>"; };
+		9E360DC72658603200A5FF41 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
 		9E3E7C41264EB3AC00F52B2B /* ValidationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationService.swift; sourceTree = "<group>"; };
 		9E3E7C43264EF2E200F52B2B /* ValidationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationManager.swift; sourceTree = "<group>"; };
 		9E4052052649616500410C58 /* SettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSection.swift; sourceTree = "<group>"; };
@@ -377,6 +379,7 @@
 				9E8B789A264AD4C8000A2856 /* FetchedResultsController.swift */,
 				9E3E7C41264EB3AC00F52B2B /* ValidationService.swift */,
 				9E3E7C43264EF2E200F52B2B /* ValidationManager.swift */,
+				9E360DC72658603200A5FF41 /* Typography.swift */,
 				9E0584A826455468003C590E /* Models */,
 				9E8B7890264AB3AC000A2856 /* Views */,
 				9E8B7891264AB3CE000A2856 /* ViewControllers */,
@@ -526,6 +529,7 @@
 				9EF457A8264488F400EFB138 /* AppDelegate.swift in Sources */,
 				9E05849E26453850003C590E /* PersistenceController.swift in Sources */,
 				9EF457AA264488F400EFB138 /* SceneDelegate.swift in Sources */,
+				9E360DC82658603200A5FF41 /* Typography.swift in Sources */,
 				9E1D41BA265314640086B45E /* CashFlowEntity.swift in Sources */,
 				9E0584C62645E28E003C590E /* DataService.swift in Sources */,
 				9E8B789B264AD4C8000A2856 /* FetchedResultsController.swift in Sources */,

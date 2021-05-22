@@ -12,8 +12,11 @@ class ValidationManager: ValidationService {
    
    func validateName(_ text: String, usedNames: [String] = []) -> NameValidation {
       if text.isEmpty { return .isEmpty }
-      if usedNames.contains(text) { return .notUnique }
+      
       let text = text.trimmingCharacters(in: .whitespacesAndNewlines)
+      let usedNames = usedNames.map { $0.lowercased() }
+      if usedNames.contains(text.lowercased()) { return .notUnique }
+      
       let textWithoutSpaces = text.replacingOccurrences(of: " ", with: "")
       if textWithoutSpaces.count < 3 { return .tooShort }
       if textWithoutSpaces.count >= 15 { return .tooLong }

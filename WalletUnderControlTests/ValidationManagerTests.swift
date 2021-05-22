@@ -20,7 +20,7 @@ class ValidationManagerTests: XCTestCase {
    
    func test_validate_correct_names() throws {
       let names = ["Test", "   Savings", "Some Value  ", "ALA LA1 23---", "Sample.Name"]
-      let usedNames = ["Test2", "TesT", "SomeValue", "Savingss"]
+      let usedNames = ["Test2", "SomeValue", "Savingss"]
       for name in names {
          let validation = validationManager.validateName(name, usedNames: usedNames)
          XCTAssertEqual(validation, .isValid, "'\(name)' should be valid.")
@@ -44,8 +44,12 @@ class ValidationManagerTests: XCTestCase {
    }
    
    func test_validate_not_unique_names() throws {
-      let validation = validationManager.validateName("Test", usedNames: ["Test"])
-      XCTAssertEqual(validation, .notUnique, "'Test' should be 'notUnique'.")
+      let names = ["test", "Test", "  test  "]
+      let usedNames = ["test"]
+      for name in names {
+         let validation = validationManager.validateName(name, usedNames: usedNames)
+         XCTAssertEqual(validation, .notUnique, "'Test' should be 'notUnique'.")
+      }
    }
    
    func test_validate_empty_names() throws {

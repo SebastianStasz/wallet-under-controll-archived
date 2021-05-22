@@ -28,7 +28,7 @@ enum NameValidation {
    var message: String? {
       switch self {
       case .notUnique:
-         return "Name is already taken.."
+         return "Name is already taken."
          
       case .tooShort:
          return "Name must have at least 3 characters."

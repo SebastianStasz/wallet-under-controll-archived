@@ -92,8 +92,12 @@ extension GroupingEntityAlert {
             validationManager.validateName(text, usedNames: usedNames)
          }
          .sink { [unowned self] name in
-            submitAction.isEnabled = name == .isValid 
-            alertController.message = name.message
+            submitAction.isEnabled = name == .isValid
+            alertController.setValue(nil, forKey: "attributedMessage")
+            
+            guard let msg = name.message else { return }
+            let message = Typography.getAlertValidationMessage(for: msg)
+            alertController.setValue(message, forKey: "attributedMessage")
          }
          .store(in: &cancellables)
    }
