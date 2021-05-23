@@ -77,6 +77,7 @@ extension Currencies {
             assert(isValid) ; return isValid
          }
          .map { $0.rates }
+         .receive(on: DispatchQueue.main)
          .sink { if case .failure(let error) = $0 {
             fatalError("Update exchange rates error: \(error)")
          }
@@ -105,6 +106,7 @@ extension Currencies {
       _ = all.map { context.delete($0) }
       
       currenciesData
+         .receive(on: DispatchQueue.main)
          .sink { if case .failure(let error) = $0 {
             fatalError("Create currencies error: \(error)")
          }

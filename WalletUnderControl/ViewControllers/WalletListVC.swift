@@ -28,14 +28,14 @@ class WalletListVC: UIViewController {
    
    override func viewDidLoad() {
       super.viewDidLoad()
-
+      
       walletsTBV.delegate = self
       walletsTBV.dataSource = self
       wallets.fetchedResultsController.delegate = self
       
       walletsTBV.rowHeight = WalletCell.height
       walletsTBV.register(WalletCell.self, forCellReuseIdentifier: WalletCell.id)
-
+      
       view = walletsTBV
       setupNavigation()
    }
@@ -97,7 +97,8 @@ extension WalletListVC {
       present(ac, animated: true)
    }
    
-   @objc private func showCreatingWalletSheet() {
+   @objc private func showCreatingWalletSheet(_ sender: Any) {
+      if let button = sender as? UIButton { button.zoomIn() }
       showActionWalletSheet(for: nil)
    }
    
@@ -117,8 +118,15 @@ extension WalletListVC: UITableViewDelegate, UITableViewDataSource {
    }
    
    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      let sectionInfo = wallets.fetchedResultsController.sections![section]
-      return sectionInfo.numberOfObjects
+      let numberOfItems = wallets.fetchedResultsController.sections![section].numberOfObjects
+      if numberOfItems == 0 {
+         let placeholder = EmptyWalletListView()
+         placeholder.createWalletButton.addTarget(self, action: #selector(showCreatingWalletSheet), for: .touchUpInside)
+         tableView.setEmptyView(placeholder)
+         return 0
+      }
+      tableView.restore()
+      return numberOfItems
    }
    
    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -157,7 +165,7 @@ extension WalletListVC: NSFetchedResultsControllerDelegate {
 
 extension WalletListVC {
    
-   /// Wallets sorted by name ascending in sceneDelegate context.
+   /// Wallets sorted by name ascending, in sceneDelegate context.
    convenience init() {
       let sort = WalletEntity.sortByNameASC
       self.init(wallets: WalletEntity.fetchedResultsController(sorting: [sort]))

@@ -76,12 +76,17 @@ class CashFlowAlertVC: UIViewController {
          amountTextField.resignFirstResponder()
       }
       
-      nameTextField.addDoneButtonToKeyboard(action: action)
-      amountTextField.addDoneButtonToKeyboard(action: action)
+      nameTextField.addActionButtonToKeyboard(action: action)
+      amountTextField.addActionButtonToKeyboard(action: action)
       
       Publishers.CombineLatest3(nameValidation, amountValidation, $selectedCategory)
          .map { $0 && $1 && $2 != nil}
          .assign(to: &$isValid)
+      
+      // Become first responder after small delay to avoid strange animation when presenting alert
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [unowned self] in
+         nameTextField.becomeFirstResponder()
+      }
    }
    
    required init?(coder: NSCoder) {
@@ -104,7 +109,6 @@ extension CashFlowAlertVC {
       // Name Text Field
       nameTextField = ViewComponents.mainTextField(title: "Name", placeholder: cashFlowType.name, padding: textFieldPadding)
       let nameRowStackView = UIStackView(arrangedSubviews: [nameTextField, nameValidationLabel])
-      nameTextField.becomeFirstResponder()
       nameRowStackView.axis = .vertical
       
       // Amount Text Field

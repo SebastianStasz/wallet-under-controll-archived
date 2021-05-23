@@ -35,6 +35,9 @@
 		9E1D41C52653183C0086B45E /* CashFlowTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1D41C42653183C0086B45E /* CashFlowTemplate.swift */; };
 		9E1D41C926531ABE0086B45E /* CashFlowEntityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1D41C826531ABE0086B45E /* CashFlowEntityTests.swift */; };
 		9E26DC3C264FC982005F9C3B /* ValidationManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E26DC3B264FC982005F9C3B /* ValidationManagerMock.swift */; };
+		9E2EBD922659982A00108551 /* UITableView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2EBD912659982A00108551 /* UITableView+Extensions.swift */; };
+		9E2EBD942659A49500108551 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2EBD932659A49500108551 /* UIImage+Extensions.swift */; };
+		9E2EBD962659A92000108551 /* EmptyWalletListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2EBD952659A92000108551 /* EmptyWalletListView.swift */; };
 		9E360DC82658603200A5FF41 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E360DC72658603200A5FF41 /* Typography.swift */; };
 		9E3E7C42264EB3AC00F52B2B /* ValidationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3E7C41264EB3AC00F52B2B /* ValidationService.swift */; };
 		9E3E7C44264EF2E200F52B2B /* ValidationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3E7C43264EF2E200F52B2B /* ValidationManager.swift */; };
@@ -115,6 +118,9 @@
 		9E1D41C42653183C0086B45E /* CashFlowTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashFlowTemplate.swift; sourceTree = "<group>"; };
 		9E1D41C826531ABE0086B45E /* CashFlowEntityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashFlowEntityTests.swift; sourceTree = "<group>"; };
 		9E26DC3B264FC982005F9C3B /* ValidationManagerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationManagerMock.swift; sourceTree = "<group>"; };
+		9E2EBD912659982A00108551 /* UITableView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extensions.swift"; sourceTree = "<group>"; };
+		9E2EBD932659A49500108551 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
+		9E2EBD952659A92000108551 /* EmptyWalletListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyWalletListView.swift; sourceTree = "<group>"; };
 		9E360DC72658603200A5FF41 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
 		9E3E7C41264EB3AC00F52B2B /* ValidationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationService.swift; sourceTree = "<group>"; };
 		9E3E7C43264EF2E200F52B2B /* ValidationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationManager.swift; sourceTree = "<group>"; };
@@ -223,6 +229,8 @@
 				9EDA61CC264D831200F9BB46 /* UILabel+Extensions.swift */,
 				9E8B75B2264C143200475DD6 /* UITextField+Extensions.swift */,
 				9E00FC2C264C4D7000B3D855 /* UIButton+Extensions.swift */,
+				9E2EBD912659982A00108551 /* UITableView+Extensions.swift */,
+				9E2EBD932659A49500108551 /* UIImage+Extensions.swift */,
 				9E8B788E264AB2A9000A2856 /* UserDefaults+Extensions.swift */,
 				9ED5317226546534004B9CCC /* String+Extensions.swift */,
 				9EDE1FDB2656EF72001650BE /* Double+Extensions.swift */,
@@ -323,6 +331,7 @@
 				9E05849826452D77003C590E /* WalletCell.swift */,
 				9EA6DD6C264880DF00424ACB /* CurrencyCell.swift */,
 				9E8B7892264AB422000A2856 /* SettingsCell.swift */,
+				9E2EBD952659A92000108551 /* EmptyWalletListView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -522,6 +531,7 @@
 				9E1D419E2653093A0086B45E /* ExchangeRateEntity.swift in Sources */,
 				9E1D41A02653099D0086B45E /* Date+Extensions.swift in Sources */,
 				9E8B788F264AB2A9000A2856 /* UserDefaults+Extensions.swift in Sources */,
+				9E2EBD962659A92000108551 /* EmptyWalletListView.swift in Sources */,
 				9E8B7897264AC92F000A2856 /* GroupingEntityListVC.swift in Sources */,
 				9E0584AD2645AD7D003C590E /* UIAction+Extensions.swift in Sources */,
 				9E51CFD62655A8B800D3D1BE /* CoreData+Protocols.swift in Sources */,
@@ -549,6 +559,7 @@
 				9ED5316F26545385004B9CCC /* CashFlowAlertVC.swift in Sources */,
 				9E3E7C44264EF2E200F52B2B /* ValidationManager.swift in Sources */,
 				9E0584AB26456B8B003C590E /* UIAlertAction+Extensions.swift in Sources */,
+				9E2EBD942659A49500108551 /* UIImage+Extensions.swift in Sources */,
 				9E8B75B1264C0B3E00475DD6 /* GroupingEntityCell.swift in Sources */,
 				9E4052062649616500410C58 /* SettingsSection.swift in Sources */,
 				9E51CFD82655ABC900D3D1BE /* CoreData+Extensions.swift in Sources */,
@@ -558,6 +569,7 @@
 				9E00FC29264C308400B3D855 /* GroupingEntityAlert.swift in Sources */,
 				9E8B7893264AB422000A2856 /* SettingsCell.swift in Sources */,
 				9E3E7C42264EB3AC00F52B2B /* ValidationService.swift in Sources */,
+				9E2EBD922659982A00108551 /* UITableView+Extensions.swift in Sources */,
 				9E0584B52645D5D2003C590E /* WalletTypeEntity.swift in Sources */,
 				9ED5317326546534004B9CCC /* String+Extensions.swift in Sources */,
 				9EDE1FDC2656EF72001650BE /* Double+Extensions.swift in Sources */,

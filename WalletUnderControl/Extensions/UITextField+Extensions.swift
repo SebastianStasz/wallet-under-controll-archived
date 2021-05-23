@@ -22,12 +22,12 @@ extension UITextField {
 // MARK: -- "Done Bar" for Keyboards
 
 extension UITextField {
-   func addDoneButtonToKeyboard(action: UIAction) {
+   func addActionButtonToKeyboard(title: String = "Done", action: UIAction) {
       let doneToolbar: UIToolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 300, height: 40))
       doneToolbar.barStyle = .default
       
       let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-      let done = UIBarButtonItem(systemItem: .done, primaryAction: action)
+      let done = UIBarButtonItem(title: title, primaryAction: action)
       
       var items = [UIBarButtonItem]()
       items.append(flexSpace)

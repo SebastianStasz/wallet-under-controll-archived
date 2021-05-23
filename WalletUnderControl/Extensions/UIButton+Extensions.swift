@@ -11,8 +11,8 @@ extension UIButton {
    
    // MARK: -- Main Animation when Clicked
    
-   func zoomIn(duration: TimeInterval = 0.2) {
-      transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+   func zoomIn(duration: TimeInterval = 0.1) {
+      transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
       
       UIView.animate(withDuration: duration, delay: 0.0, options: [.curveLinear], animations: { [unowned self] in
          transform = .identity

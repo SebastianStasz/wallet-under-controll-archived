@@ -20,10 +20,8 @@ class CurrencyListVC: UIViewController {
       self.picker = picker
       super.init(nibName: nil, bundle: nil)
       
-      currencyTBV.delegate = self
-      currencyTBV.dataSource = self
-      
       currencies.$all
+         .receive(on: DispatchQueue.main)
          .sink { [unowned self] _ in
             currencyTBV.reloadData()
          }
@@ -32,12 +30,16 @@ class CurrencyListVC: UIViewController {
    
    override func viewDidLoad() {
       super.viewDidLoad()
+      currencyTBV.delegate = self
+      currencyTBV.dataSource = self
       
       currencyTBV.rowHeight = CurrencyCell.height
       currencyTBV.register(CurrencyCell.self, forCellReuseIdentifier: CurrencyCell.id)
       
-      view = currencyTBV
+      navigationController?.navigationBar.prefersLargeTitles = true
       title = picker?.title ?? "Currencies"
+      
+      view = currencyTBV
    }
    
    required init?(coder: NSCoder) {

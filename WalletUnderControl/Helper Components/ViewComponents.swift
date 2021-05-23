@@ -9,6 +9,18 @@ import UIKit
 
 struct ViewComponents {
    
+   static func mainButton(title: String) -> MainButton {
+      let button = MainButton()
+      button.layer.cornerRadius = 15
+      button.backgroundColor = .systemBlue
+      button.setTitle(title, for: .normal)
+      button.setTitleColor(.white, for: .normal)
+      button.setTitleColor(.systemGray, for: .disabled)
+      button.titleLabel?.font = .systemFont(ofSize: 20, weight: .semibold)
+      
+      return button
+   }
+   
    static func validationMessageLabel() -> PaddingLabel {
       let label = PaddingLabel(padding: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
       label.textColor = Typography.Color.validationRed

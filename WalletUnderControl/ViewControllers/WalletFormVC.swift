@@ -55,8 +55,8 @@ class WalletFormVC: UIViewController {
          walletFormView.balanceTextField.resignFirstResponder()
       }
       
-      walletFormView.nameTextField.addDoneButtonToKeyboard(action: dismissAction)
-      walletFormView.balanceTextField.addDoneButtonToKeyboard(action: dismissAction)
+      walletFormView.nameTextField.addActionButtonToKeyboard(action: dismissAction)
+      walletFormView.balanceTextField.addActionButtonToKeyboard(action: dismissAction)
       walletFormView.nameTextField.becomeFirstResponder()
       walletFormView.nameTextField.tag = 0
       walletFormView.balanceTextField.tag = 1

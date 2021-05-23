@@ -51,7 +51,7 @@ extension GroupingEntityAlert {
       
       alertController.addTextField() { [unowned self] textField in
          let action = UIAction() { _ in alertController.dismiss(animated: true) }
-         textField.addDoneButtonToKeyboard(action: action)
+         textField.addActionButtonToKeyboard(title: "Cancel", action: action)
       }
       
       var submitBtnTitle = "Add"

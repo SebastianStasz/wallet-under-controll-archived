@@ -11,6 +11,7 @@ class WalletFormView: UIView {
    
    private var walletDetailsStackView: UIStackView!
    private var iconSettingsStackView: UIStackView!
+   private var currencyPickerStackView: UIStackView!
    
    private let textFieldPadding = UIEdgeInsets(top: 7, left: 12, bottom: 7, right: 12)
    var nameTextField: MainTextField!
@@ -64,8 +65,8 @@ extension WalletFormView {
       // Currency Picker Row
       let currencyPicker = setupPickerRow(for: selectCurrencyBTN, withTitle: "Currency", valueLabel: selectedCurrencyLabel)
       let currencyPickerValidationLabel = ViewComponents.validationMessageLabel()
-      let currencyPickerRowStack = UIStackView(arrangedSubviews: [currencyPicker, currencyPickerValidationLabel])
-      currencyPickerRowStack.axis = .vertical
+      currencyPickerStackView = UIStackView(arrangedSubviews: [currencyPicker, currencyPickerValidationLabel])
+      currencyPickerStackView.axis = .vertical
       selectedCurrencyLabel.text = "------"
       
       // Wallet Type Picker Row
@@ -76,7 +77,7 @@ extension WalletFormView {
       selectedWalletTypeLabel.text = "------"
       
       // Wallet Detail Stack View
-      walletDetailsStackView = UIStackView(arrangedSubviews: [detailsHeaderLabel, nameRowStackView, balanceRowStackView, currencyPickerRowStack, walletTypePickerRowStack])
+      walletDetailsStackView = UIStackView(arrangedSubviews: [detailsHeaderLabel, nameRowStackView, balanceRowStackView, currencyPickerStackView, walletTypePickerRowStack])
       walletDetailsStackView.axis = .vertical
       walletDetailsStackView.spacing = 5
       
@@ -86,14 +87,8 @@ extension WalletFormView {
       iconSettingsStackView.spacing = 5
       
       // Submit Button
-      submitButton = MainButton()
+      submitButton = ViewComponents.mainButton(title: "Create")
       submitButton.isEnabled = false
-      submitButton.layer.cornerRadius = 15
-      submitButton.backgroundColor = .systemBlue
-      submitButton.setTitle("Create", for: .normal)
-      submitButton.setTitleColor(.white, for: .normal)
-      submitButton.setTitleColor(.systemGray, for: .disabled)
-      submitButton.titleLabel?.font = .systemFont(ofSize: 20, weight: .semibold)
 
       // Main View
       backgroundColor = .secondarySystemBackground
@@ -190,6 +185,7 @@ extension WalletFormView {
       submitButton.setTitle("Update", for: .normal)
       
       balanceTextField.alpha = 0.5
+      currencyPickerStackView.alpha = 0.5
       balanceTextField.isEnabled = false
       selectCurrencyBTN.isEnabled = false
    }

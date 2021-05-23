@@ -19,6 +19,10 @@ class GroupingEntityListVC<T: GroupingEntity>: UIViewController, UITableViewDele
    private let groupungEntityListView = GroupingEntityListView<T>()
    private var tableView: UITableView { groupungEntityListView.tableView }
    
+   private var listTitle: String {
+      cashFlowType == nil ? "Wallet Types" : "\(cashFlowType!.name) Categories"
+   }
+   
    private init(
       picker: Picker?,
       cashFlowType: CashFlowType?,
@@ -38,10 +42,9 @@ class GroupingEntityListVC<T: GroupingEntity>: UIViewController, UITableViewDele
       tableView.dataSource = self
       groupingEntities.fetchedResultsController.delegate = self
       
-      let listTitle = cashFlowType == nil ? "Wallet Types" : "\(cashFlowType!.name) Categories"
-      title = picker == nil ? listTitle : "Select Type"
+      title = picker == nil ? listTitle : picker!.title
       navigationController?.navigationBar.prefersLargeTitles = true
-
+      
       let showAlertForCreating = UIAction() { [unowned self] _ in
          showWalletTypeAlert(edit: nil)
       }
@@ -83,8 +86,13 @@ class GroupingEntityListVC<T: GroupingEntity>: UIViewController, UITableViewDele
    }
    
    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      let sectionInfo = groupingEntities.fetchedResultsController.sections![section]
-      return sectionInfo.numberOfObjects
+      let numberOfItems = groupingEntities.fetchedResultsController.sections![section].numberOfObjects
+      if numberOfItems == 0 {
+         tableView.setEmptyMessage("Oh, there is no \(listTitle). Simply create one using the green button.")
+         return 0
+      }
+      tableView.restore()
+      return numberOfItems
    }
    
    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -107,7 +115,7 @@ class GroupingEntityListVC<T: GroupingEntity>: UIViewController, UITableViewDele
    // MARK: -- NSFetchedResultsController Delegate
    
    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-
+      
       switch type {
       case .insert:
          let indexPath = groupingEntities.fetchedResultsController.indexPath(forObject: anObject as! NSManagedObject)!
@@ -124,7 +132,7 @@ class GroupingEntityListVC<T: GroupingEntity>: UIViewController, UITableViewDele
 // MARK: -- User Interactions
 
 extension GroupingEntityListVC {
-
+   
    private func showWalletTypeAlert(edit item: T?) {
       let items = groupingEntities.fetchedResultsController.fetchedObjects as! [T]
       let usedNames = items.map { $0.name }
@@ -170,7 +178,7 @@ extension GroupingEntityListVC {
    {
       let sort = WalletTypeEntity.sortByNameASC
       let fetchedResultsController = FetchedResultsController<T>(context: context, sorting: [sort])
-      self.init(picker: nil, cashFlowType: nil, context: context, fetchedResultsController: fetchedResultsController)
+      self.init(picker: picker, cashFlowType: nil, context: context, fetchedResultsController: fetchedResultsController)
    }
    
    /// List for CashFlow Categories

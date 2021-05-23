@@ -50,6 +50,7 @@ class WalletCell: UITableViewCell {
       walletIconIV.contentMode = .scaleAspectFit
       
       topStackView = UIStackView(arrangedSubviews: [walletNameLabel, walletTypeLabel])
+      topStackView.distribution = .equalSpacing
       topStackView.axis = .horizontal
       
       verticalSV = UIStackView(arrangedSubviews: [topStackView, walletBalanceLabel])
