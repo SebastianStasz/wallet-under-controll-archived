@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import UIKit
 
 
 @objc(WalletEntity)
@@ -37,11 +38,32 @@ public class WalletEntity: NSManagedObject {
       get { IconColor(rawValue: iconColor_)! }
       set { iconColor_ = newValue.rawValue }
    }
+   
+   /// Returns available balance, formatted in the currency of the wallet.
+   var availableBalanceStr: String {
+      availableBalance.toCurrency(currency.code)
+   }
+   
+   /// Returns available balance, formatted in the specified currency code.
+   func availableBalanceStr(in currencyCode: String) -> String? {
+      let exchangeRate = currency.exchangeRates.first(where: { $0.code == currencyCode })
+      assert(exchangeRate != nil, "Exchange Rate should exist in database.")
+      return exchangeRate != nil ? (availableBalance * exchangeRate!.rateValue).toCurrency(currencyCode) : nil
+   }
+   
+   /// Returns a UIImageView with a wallet icon in the color of the wallet icon.
+   var iconView: UIImageView {
+      let iconView = UIImageView(image: icon.img)
+      iconView.tintColor = iconColor.color
+      return iconView
+   }
 }
 
 // MARK: -- Static Properties
 
 extension WalletEntity {
+   
+   /// Sort by WalletEntity.name, ascending.
    static let sortByNameASC = NSSortDescriptor(keyPath: \WalletEntity.name, ascending: true)
 }
 

@@ -5,7 +5,7 @@
 //  Created by Sebastian Staszczyk on 07/05/2021.
 //
 
-import Foundation
+import UIKit
 
 extension WalletIcon: CaseIterable {}
 
@@ -44,5 +44,9 @@ public enum WalletIcon: Int16 {
       case .banknoteFill:
          return "banknote.fill"
       }
+   }
+   
+   var img: UIImage {
+      UIImage(systemName: self.name)!
    }
 }

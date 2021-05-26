@@ -16,7 +16,13 @@ protocol SettingsProtocol {
 
 
 struct Settings: SettingsProtocol {
+   static let shared = Settings()
+   
    private let userDefaults: UserDefaults
+   
+   init(userDefaults: UserDefaults = UserDefaults.standard) {
+      self.userDefaults = userDefaults
+   }
    
    var primaryCurrencyCode: String {
       guard let code = userDefaults.string(forKey: Currency.primary.key) else {
@@ -32,10 +38,6 @@ struct Settings: SettingsProtocol {
          return self.secondaryCurrencyCode
       }
       return code
-   }
-   
-   init(userDefaults: UserDefaults = UserDefaults.standard) {
-      self.userDefaults = userDefaults
    }
    
    // MARK: -- Intents
