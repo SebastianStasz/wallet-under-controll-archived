@@ -5,12 +5,15 @@
 //  Created by Sebastian Staszczyk on 24/05/2021.
 //
 
+import CoreData
 import Combine
 import UIKit
 
 protocol WalletDetailView: AnyObject {
    var updateWalletInfo: PassthroughSubject<WalletDetailVC.Info, Never> { get set }
    var cashFlowAlert: CashFlowAlert? { get set}
+   
+   func present(_ alert: UIAlertController)
 }
 
 
@@ -25,6 +28,14 @@ class WalletDetailVC: UIViewController {
    
    private var presenter: WalletDetailPresenterProtocol?
    
+   private var fetchedResultsController: NSFetchedResultsController<NSManagedObject> {
+      presenter!.cashFlowController.fetchedResultsController
+   }
+   
+   // View Components
+   private let headerView = UIView()
+   private let cashFlowTBV = UITableView()
+   
    private let balanceInWalletCurrencyLabel = UILabel()
    private var balanceInPrimaryCurrencyLabel = UILabel()
    private var walletIconImageView = UIImageView()
@@ -33,8 +44,6 @@ class WalletDetailVC: UIViewController {
    private let addExpenseBTN = UIButton()
    private let anotherActionBTN = UIButton()
    private let openStatisticsBTN = UIButton()
-   
-   private let headerView = UIView()
    
    init(wallet: WalletEntity, settings: SettingsProtocol = Settings.shared) {
       super.init(nibName: nil, bundle: nil)
@@ -45,11 +54,122 @@ class WalletDetailVC: UIViewController {
    override func viewDidLoad() {
       super.viewDidLoad()
       presenter?.viewDidLoad()
+      fetchedResultsController.delegate = self
+      cashFlowTBV.register(CashFlowCell.self, forCellReuseIdentifier: CashFlowCell.id)
+      cashFlowTBV.delegate = self
+      cashFlowTBV.dataSource = self
       setupView()
    }
    
    required init?(coder: NSCoder) {
       fatalError("init(coder:) has not been implemented")
+   }
+}
+
+// MARK: -- TableView Setup
+
+extension WalletDetailVC: UITableViewDelegate, UITableViewDataSource {
+   
+   func numberOfSections(in tableView: UITableView) -> Int {
+      fetchedResultsController.sections?.count ?? 1
+   }
+   
+   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+      fetchedResultsController.sections?[section].numberOfObjects ?? 0
+   }
+   
+   func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+      fetchedResultsController.sections?[section].name
+   }
+   
+   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+      let cell = tableView.dequeueReusableCell(withIdentifier: "CashFlowCell") as! CashFlowCell
+      let cashFlow = fetchedResultsController.object(at: indexPath) as! CashFlowEntity
+      cell.configure(cashFlow: cashFlow)
+      
+      return cell
+   }
+
+   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+      tableView.deselectRow(at: indexPath, animated: true)
+   }
+   
+   func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+      let cashFlow = fetchedResultsController.object(at: indexPath) as! CashFlowEntity
+      
+      let menuConfig = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+         
+         let deleteBTN = UIAction.delete { [unowned self] in
+            presenter?.deleteCashFlowBtnTapped(for: cashFlow)
+         }
+         
+         let editBTN = UIAction.edit { [unowned self] in
+            presenter?.editCashFlowBtnTapped(for: cashFlow)
+         }
+         
+         return UIMenu(title: cashFlow.name, children: [editBTN, deleteBTN])
+      }
+      
+      return menuConfig
+   }
+}
+
+// MARK: -- FetchedResultsControllerDelegate Setup
+
+extension WalletDetailVC: NSFetchedResultsControllerDelegate {
+   func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+      
+      func insertNewSection() {
+         cashFlowTBV.insertSections([newIndexPath!.section], with: .automatic)
+      }
+      func deleteSection() {
+         cashFlowTBV.deleteSections([indexPath!.section], with: .automatic)
+      }
+      func inertNewRow() {
+         cashFlowTBV.insertRows(at: [newIndexPath!], with: .automatic)
+      }
+      func deleteOldRow() {
+         cashFlowTBV.deleteRows(at: [indexPath!], with: .left)
+      }
+      
+      func dateHasChanged() {
+         let differenceInSectionsAfterUpdate = cashFlowTBV.numberOfSections - fetchedResultsController.sections!.count
+         switch differenceInSectionsAfterUpdate {
+         // Moved to new section without deleting
+         case _ where differenceInSectionsAfterUpdate < 0:
+            insertNewSection() ; deleteOldRow() ; inertNewRow()
+            
+         // Moved to existing section with deleting old
+         case _ where differenceInSectionsAfterUpdate > 0:
+            deleteSection() ; inertNewRow()
+            
+         // Moved to new section with deleting old AND moved to existing section
+         default:
+            cashFlowTBV.reloadSections([indexPath!.section], with: .automatic)
+            cashFlowTBV.reloadSections([newIndexPath!.section], with: .automatic)
+         }
+      }
+      
+      cashFlowTBV.beginUpdates()
+      switch type {
+      case .delete:
+         let isLastElement = cashFlowTBV.numberOfRows(inSection: indexPath!.section) == 1
+         isLastElement ? deleteSection() : deleteOldRow()
+      
+      case .insert:
+         inertNewRow()
+         let isNewSection = cashFlowTBV.numberOfSections < fetchedResultsController.sections!.count
+         if isNewSection { insertNewSection() }
+      
+      case .update:
+         cashFlowTBV.reloadRows(at: [indexPath!], with: .automatic)
+         
+      case .move: dateHasChanged()
+         
+      default: break
+      }
+      cashFlowTBV.endUpdates()
+      presenter?.contextHasChanged()
    }
 }
 
@@ -78,10 +198,14 @@ extension WalletDetailVC {
       headerView.addSubview(buttonsStackView)
       headerView.addSubview(walletIconImageView)
       view.addSubview(headerView)
+      view.addSubview(cashFlowTBV)
+      
+      // MARK: Auto Layout
       
       balanceStackView.translatesAutoresizingMaskIntoConstraints = false
       buttonsStackView.translatesAutoresizingMaskIntoConstraints = false
       walletIconImageView.translatesAutoresizingMaskIntoConstraints = false
+      cashFlowTBV.translatesAutoresizingMaskIntoConstraints = false
       
       NSLayoutConstraint.activate([
          walletIconImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: -50),
@@ -95,6 +219,11 @@ extension WalletDetailVC {
          buttonsStackView.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -20),
          buttonsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
          buttonsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18),
+         
+         cashFlowTBV.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 20),
+         cashFlowTBV.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+         cashFlowTBV.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+         cashFlowTBV.trailingAnchor.constraint(equalTo: view.trailingAnchor),
       ])
    }
    
@@ -161,6 +290,10 @@ extension WalletDetailVC {
 
 extension WalletDetailVC: WalletDetailView {
    
+   func present(_ alert: UIAlertController) {
+      present(alert, animated: true)
+   }
+
    func listenForViewUpdates() {
       
       $cashFlowAlert

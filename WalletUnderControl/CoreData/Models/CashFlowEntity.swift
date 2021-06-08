@@ -21,6 +21,10 @@ public class CashFlowEntity: NSManagedObject {
    @NSManaged private(set) var value: Double
    @NSManaged private(set) var wallet: WalletEntity
    @NSManaged private(set) var category: CashFlowCategoryEntity
+   
+   @objc var yearAndMonth: String {
+      date.string(format: "yyyy MMMM")
+   }
 }
 
 // MARK: -- Static Properties
@@ -29,7 +33,6 @@ extension CashFlowEntity {
    
    static let sortByDateASC = NSSortDescriptor(keyPath: \CashFlowEntity.date, ascending: true)
    static let sortByDateDESC = NSSortDescriptor(keyPath: \CashFlowEntity.date, ascending: false)
-   
 }
 
 // MARK: -- Methods
@@ -44,6 +47,10 @@ extension CashFlowEntity {
       let type = NSPredicate(format: "category.type_ == \(type.rawValue)")
       let date = NSPredicate(format: "date >= %@ AND date < %@", startDate as NSDate, endDate as NSDate)
       return NSCompoundPredicate(andPredicateWithSubpredicates: [type, date])
+   }
+   
+   static func filter(wallet: WalletEntity) -> NSPredicate {
+      NSPredicate(format: "wallet == %@", wallet)
    }
    
    static func create(in context: NSManagedObjectContext, using template: CashFlowTemplate) {
@@ -70,3 +77,52 @@ extension CashFlowEntity {
 }
 
 extension CashFlowEntity: Identifiable { }
+
+
+// MARK: -- Sample Data
+
+extension CashFlowEntity {
+   
+   @discardableResult
+   static func createCashFlows(in context: NSManagedObjectContext) -> [CashFlowEntity] {
+      let wallets = WalletEntity.createWallets(context: context)
+      let categories = CashFlowCategoryEntity.createCashFlowCategories(context: context)
+      let incomeCategories = categories.filter { $0.type == .income }
+      let expenseCategories = categories.filter { $0.type == .expense }
+      
+      var cashFlows: [CashFlowEntity] = []
+      
+      let incomeNames = ["Salary May", "Salary June", "BTC Investment", "Tax refund", "Extra Income"]
+      let incomeValues: [Double] = [4200, 4100, 5000, 623, 300]
+      
+      let toDate = Date()
+      let fromDate = Calendar.current.date(byAdding: .month, value: -3, to: toDate)!
+      
+      for i in incomeNames.indices {
+         let cashFlow = CashFlowEntity(context: context)
+         let template = CashFlowTemplate(name: incomeNames[i], date: Date.randomBetween(start: fromDate, end: toDate), value: incomeValues[i], wallet: wallets.randomElement()!, category: incomeCategories.randomElement()!)
+
+         cashFlow.wallet = template.wallet
+         cashFlow.category = template.category
+         
+         cashFlow.update(using: template)
+         cashFlows.append(cashFlow)
+      }
+      
+      let expenseNames = ["Groccery", "Dog food", "Car Wash", "Netflix", "Insurance", "Bike parts", "Electricity bill", "Shoes", "Bus", "Water bill"]
+      let expenseValues: [Double] = [56, 20, 10, 30, 1200, 581, 392, 190, 2.5, 276]
+      
+      for i in expenseNames.indices {
+         let cashFlow = CashFlowEntity(context: context)
+         let template = CashFlowTemplate(name: expenseNames[i], date: Date.randomBetween(start: fromDate, end: toDate), value: expenseValues[i], wallet: wallets.randomElement()!, category: expenseCategories.randomElement()!)
+
+         cashFlow.wallet = template.wallet
+         cashFlow.category = template.category
+         
+         cashFlow.update(using: template)
+         cashFlows.append(cashFlow)
+      }
+      
+      return cashFlows
+   }
+}

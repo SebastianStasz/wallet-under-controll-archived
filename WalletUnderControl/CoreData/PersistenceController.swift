@@ -59,8 +59,8 @@ extension PersistenceController {
       let result = PersistenceController.init(inMemory: true)
       let viewContext = result.context
       
-      _ = WalletEntity.createWallets(context: viewContext)
-//      _ = CashFlowCategoryEntity.createCashFlowCategories(context: viewContext)
+      // CashFlows creates Wallets and Categories as well
+      CashFlowEntity.createCashFlows(in: viewContext)
       
       do {
          try viewContext.save()

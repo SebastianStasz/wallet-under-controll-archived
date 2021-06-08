@@ -87,6 +87,17 @@ class CashFlowAlertVC: UIViewController {
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [unowned self] in
          nameTextField.becomeFirstResponder()
       }
+      
+      setCategoryPickerVisibility()
+      
+      if let cashFlow = cashFlow {
+         let categoryIndex = cashFlowCategories.firstIndex(of: cashFlow.category)!
+         categoryPicker.selectRow(categoryIndex, inComponent: 0, animated: false)
+         amountTextField.insertText(String(cashFlow.value))
+         nameTextField.insertText(cashFlow.name)
+         datePicker.date = cashFlow.date
+         isValid = true
+      }
    }
    
    required init?(coder: NSCoder) {
@@ -102,7 +113,7 @@ extension CashFlowAlertVC {
       let textFieldPadding = UIEdgeInsets(top: 3, left: 12, bottom: 3, right: 12)
       
       // Date Picker
-      datePicker.date = cashFlow?.date ?? Date()
+      datePicker.date = Date()
       datePicker.preferredDatePickerStyle = .compact
       datePicker.datePickerMode = .date
       
@@ -119,7 +130,6 @@ extension CashFlowAlertVC {
       
       // Category Picker
       categoryValidationLabel.text = "No \(cashFlowType.name.lowercased()) categories, create one first."
-      setCategoryPickerVisibility()
       
       // Add Category Button
       let addCategoryAction = UIAction() { [unowned self] _ in
@@ -185,8 +195,8 @@ extension CashFlowAlertVC: NSFetchedResultsControllerDelegate {
       
       switch type {
       case .insert:
-         setCategoryPickerVisibility()
          categoryPicker.reloadAllComponents()
+         setCategoryPickerVisibility()
       default: break
       }
    }
@@ -217,8 +227,7 @@ extension CashFlowAlertVC {
       } else {
          categoryPicker.isHidden = false
          categoryValidationLabel.isHidden = true
-         selectedCategory = cashFlowCategories.first
-         // TODO: Change behavior when editing.
+         selectedCategory = cashFlow == nil ? cashFlowCategories.first : cashFlow!.category
       }
    }
    
@@ -285,9 +294,9 @@ extension CashFlowAlertVC {
    
    /// CashFlowAlertVC for editing existing cash-flow.
    convenience init(editing cashFlow: CashFlowEntity,
-                    validationManager: ValidationService = ValidationManager(),
-                    in context: NSManagedObjectContext = SceneDelegate.context)
+                    validationManager: ValidationService = ValidationManager())
    {
+      let context = cashFlow.managedObjectContext ?? SceneDelegate.context
       self.init(cashFlow: cashFlow, type: cashFlow.category.type, wallet: cashFlow.wallet, validationManager: validationManager, context: context)
    }
 }

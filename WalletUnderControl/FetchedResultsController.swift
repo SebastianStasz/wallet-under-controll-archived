@@ -17,14 +17,19 @@ class FetchedResultsController<T>: NSObject, NSFetchedResultsControllerDelegate 
       context.delete(object)
    }
    
-   init(context: NSManagedObjectContext = SceneDelegate.context, predicate: NSPredicate? = nil, sorting: [NSSortDescriptor] = []) {
+   init(context: NSManagedObjectContext = SceneDelegate.context,
+        predicate: NSPredicate? = nil,
+        sorting: [NSSortDescriptor] = [],
+        sectionNameKeyPath: String? = nil)
+   {
       self.context = context
-      print("Creating FetchedResultsController for \(T.Type.self)")
+//      print("Creating FetchedResultsController for \(T.Type.self)")
       let request = NSFetchRequest<T>(entityName: T.entity().name!) as! NSFetchRequest<NSManagedObject>
       request.sortDescriptors = sorting
       request.predicate = predicate
+      request.fetchBatchSize = 20
       
-      fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+      fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: sectionNameKeyPath, cacheName: nil)
       
       super.init()
       fetchedResultsController.delegate = self

@@ -124,6 +124,7 @@ extension WalletEntity: Identifiable {}
 
 extension WalletEntity {
    
+   @discardableResult
    static func createWallets(context: NSManagedObjectContext) -> [WalletEntity] {
       let currencies = CurrencyEntity.createCurrencies(context: context)
       let names = ["Savings", "Main", "Investment", "Long Term"]
@@ -152,6 +153,7 @@ extension WalletEntity {
       return wallets
    }
    
+   @discardableResult
    static func createWallet(context: NSManagedObjectContext, initialBalance: Double = 200) -> WalletEntity {
       let currencies = CurrencyEntity.createCurrencies(context: context)
       let walletType = WalletTypeEntity.createWalletType(context: context)

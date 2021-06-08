@@ -66,6 +66,7 @@
 		9EA6DD692648787100424ACB /* CurrencyListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA6DD682648787100424ACB /* CurrencyListVC.swift */; };
 		9EA6DD6B26487F9C00424ACB /* currencyData.json in Resources */ = {isa = PBXBuildFile; fileRef = 9EA6DD6A26487F9C00424ACB /* currencyData.json */; };
 		9EA6DD6D264880DF00424ACB /* CurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA6DD6C264880DF00424ACB /* CurrencyCell.swift */; };
+		9EC9397A266F6B5E000BCEBB /* CashFlowCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EC93979266F6B5E000BCEBB /* CashFlowCell.swift */; };
 		9ED5316F26545385004B9CCC /* CashFlowAlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED5316E26545385004B9CCC /* CashFlowAlertVC.swift */; };
 		9ED5317126545487004B9CCC /* CashFlowAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED5317026545487004B9CCC /* CashFlowAlert.swift */; };
 		9ED5317326546534004B9CCC /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED5317226546534004B9CCC /* String+Extensions.swift */; };
@@ -154,6 +155,7 @@
 		9EA6DD682648787100424ACB /* CurrencyListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyListVC.swift; sourceTree = "<group>"; };
 		9EA6DD6A26487F9C00424ACB /* currencyData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = currencyData.json; sourceTree = "<group>"; };
 		9EA6DD6C264880DF00424ACB /* CurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCell.swift; sourceTree = "<group>"; };
+		9EC93979266F6B5E000BCEBB /* CashFlowCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashFlowCell.swift; sourceTree = "<group>"; };
 		9ED5316E26545385004B9CCC /* CashFlowAlertVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashFlowAlertVC.swift; sourceTree = "<group>"; };
 		9ED5317026545487004B9CCC /* CashFlowAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashFlowAlert.swift; sourceTree = "<group>"; };
 		9ED5317226546534004B9CCC /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
@@ -352,6 +354,7 @@
 				9E00FC2A264C45F900B3D855 /* GroupingEntityListView.swift */,
 				9E8B75B0264C0B3E00475DD6 /* GroupingEntityCell.swift */,
 				9E05849826452D77003C590E /* WalletCell.swift */,
+				9EC93979266F6B5E000BCEBB /* CashFlowCell.swift */,
 				9EA6DD6C264880DF00424ACB /* CurrencyCell.swift */,
 				9E8B7892264AB422000A2856 /* SettingsCell.swift */,
 				9E2EBD952659A92000108551 /* EmptyWalletListView.swift */,
@@ -565,6 +568,7 @@
 				9E05849E26453850003C590E /* PersistenceController.swift in Sources */,
 				9EF457AA264488F400EFB138 /* SceneDelegate.swift in Sources */,
 				9E360DC82658603200A5FF41 /* Typography.swift in Sources */,
+				9EC9397A266F6B5E000BCEBB /* CashFlowCell.swift in Sources */,
 				9E1D41BA265314640086B45E /* CashFlowEntity.swift in Sources */,
 				9E0584C62645E28E003C590E /* DataService.swift in Sources */,
 				9E8B789B264AD4C8000A2856 /* FetchedResultsController.swift in Sources */,

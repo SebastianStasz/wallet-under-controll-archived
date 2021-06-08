@@ -65,6 +65,7 @@ extension WalletTypeEntity {
 
 extension WalletTypeEntity {
    
+   @discardableResult
    static func createWalletTypes(context: NSManagedObjectContext) -> [WalletTypeEntity] {
       let names = ["Getin Bank", "Card", "Savings"]
       var walletTypes: [WalletTypeEntity] = []
@@ -78,6 +79,7 @@ extension WalletTypeEntity {
       return walletTypes
    }
    
+   @discardableResult
    static func createWalletType(context: NSManagedObjectContext) -> WalletTypeEntity {
       let walletType = WalletTypeEntity(context: context)
       walletType.name = "Getin Bank"
