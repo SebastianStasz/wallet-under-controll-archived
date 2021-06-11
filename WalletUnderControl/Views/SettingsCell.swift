@@ -15,12 +15,17 @@ class SettingsCell: UITableViewCell {
    
    private let nameLabel = UILabel()
    private let valueLabel = UILabel()
+   private var showIndicator: Bool = true
+   private var trailingPadding: CGFloat = -20 { didSet {
+      cellHorizontalStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: trailingPadding).isActive = true
+      }
+   }
    
    func configure(with option: SettingsOption) {
       nameLabel.text = option.title
       valueLabel.text = option.value
-      
-      accessoryType = .disclosureIndicator
+      trailingPadding = option.showIndicator ? -40 : -20
+      accessoryType = option.showIndicator ? .disclosureIndicator : .none
    }
    
    private func setupViews() {
@@ -42,7 +47,7 @@ class SettingsCell: UITableViewCell {
          cellHorizontalStack.topAnchor.constraint(equalTo: topAnchor),
          cellHorizontalStack.bottomAnchor.constraint(equalTo: bottomAnchor),
          cellHorizontalStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-         cellHorizontalStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -40),
+         cellHorizontalStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: trailingPadding),
       ])
    }
    

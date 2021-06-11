@@ -12,6 +12,7 @@ extension UserDefaults {
    enum Key: String {
       case primaryCurrencyCode
       case secondaryCurrencyCode
+      case isPrimaryCurrencyPresented
    }
    
 }

@@ -30,24 +30,30 @@ class SettingsVC: UIViewController {
          ]),
          .init(title: "Currencies", options: [
             
-            .init(title: "Primary", value: settings.primaryCurrencyCode, handler: { [unowned self] in
+            .init(title: "Primary", value: settings.primaryCurrencyCode) { [unowned self] in
                let picker = CurrencyListVC.Picker(title: "Primary Currency", selectedCurrency: settings.primaryCurrencyCode) { currency in
-                  settings.setCurrency(currency, for: .primary)
+                  settings.setCurrency(currency, for: .primaryCurrency)
                   reloadView()
                }
                
                let currencyListVC = CurrencyListVC(currencies: currencies, picker: picker)
                presentVC(currencyListVC)
-            }),
+            },
             
-            .init(title: "Secondary", value: settings.secondaryCurrencyCode, handler: { [unowned self] in
+            .init(title: "Secondary", value: settings.secondaryCurrencyCode) { [unowned self] in
                let picker = CurrencyListVC.Picker(title: "Secondary Currency", selectedCurrency: settings.secondaryCurrencyCode) { currency in
-                  settings.setCurrency(currency, for: .secondary)
+                  settings.setCurrency(currency, for: .secondaryCurrency)
                   reloadView()
                }
                let currencyListVC = CurrencyListVC(currencies: currencies, picker: picker)
                presentVC(currencyListVC)
-            })
+            }
+         ]),
+         .init(title: "Other", options: [
+            .init(title: "Calculate to primary currency:", value: isPrimaryCurrencyPresented, showIndicator: false) { [unowned self] in
+               settings.toggleIsPrimaryCurrencyPresented()
+               reloadView()
+            }
          ]),
       ]
    }
@@ -64,9 +70,14 @@ class SettingsVC: UIViewController {
       view = settingsTB
    }
    
+   private var isPrimaryCurrencyPresented: String {
+      settings.isPrimaryCurrencyPresented ? "🟢" : "🔴"
+   }
+   
    private func reloadView() {
       sections[1].options[0].value = settings.primaryCurrencyCode
       sections[1].options[1].value = settings.secondaryCurrencyCode
+      sections[2].options[0].value = isPrimaryCurrencyPresented
       settingsTB.reloadData()
    }
    

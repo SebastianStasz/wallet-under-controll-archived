@@ -45,17 +45,17 @@ class WalletDetailPresenter {
                                                                    sectionNameKeyPath: #keyPath(CashFlowEntity.yearAndMonth))
    }
    
-   private var isInPrimaryCurrency: Bool {
-      wallet.currency.code == settings.primaryCurrencyCode
+   private var shouldDisplayPrimaryCurrency: Bool {
+      wallet.currency.code != settings.primaryCurrencyCode && settings.isPrimaryCurrencyPresented
    }
 }
 
 // MARK: -- Actions
 
 extension WalletDetailPresenter: WalletDetailPresenterProtocol {
-   
+
    func viewDidLoad() {
-      let primaryCurrencyCode = isInPrimaryCurrency ? nil : settings.primaryCurrencyCode
+      let primaryCurrencyCode = shouldDisplayPrimaryCurrency ? settings.primaryCurrencyCode : nil
       let walletInfo = WalletDetailVC.Info(wallet: wallet, primaryCurrencyCode: primaryCurrencyCode)
       view?.updateWalletInfo.send(walletInfo)
    }
