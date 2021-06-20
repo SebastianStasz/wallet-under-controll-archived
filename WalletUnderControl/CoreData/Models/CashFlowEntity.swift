@@ -50,12 +50,17 @@ extension CashFlowEntity {
     }
     
     static func filter(type: CashFlowType) -> NSPredicate {
-        let type = NSPredicate(format: "category.type_ == \(type.rawValue)")
-        return type
+        NSPredicate(format: "category.type_ == \(type.rawValue)")
     }
-    
+
     static func filter(wallet: WalletEntity) -> NSPredicate {
         NSPredicate(format: "wallet == %@", wallet)
+    }
+    
+    static func filter(wallet: WalletEntity, type: CashFlowType) -> NSPredicate {
+        let type = filter(type: type)
+        let wallet = filter(wallet: wallet)
+        return NSCompoundPredicate(andPredicateWithSubpredicates: [type, wallet])
     }
     
     static func create(in context: NSManagedObjectContext, using template: CashFlowTemplate) {

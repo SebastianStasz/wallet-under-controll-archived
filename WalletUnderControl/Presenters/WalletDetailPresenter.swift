@@ -58,9 +58,9 @@ extension WalletDetailPresenter: WalletDetailPresenterProtocol {
     func cashFlowFilterChanged(to filter: CashFlowFilter) {
         switch filter {
         case .all:
-            cashFlowController.removePredicate()
+            cashFlowController.changePredicate(CashFlowEntity.filter(wallet: wallet))
         case .type(let type):
-            cashFlowController.changePredicate(CashFlowEntity.filter(type: type))
+            cashFlowController.changePredicate(CashFlowEntity.filter(wallet: wallet, type: type))
         }
         view?.reloadTableView()
     }
