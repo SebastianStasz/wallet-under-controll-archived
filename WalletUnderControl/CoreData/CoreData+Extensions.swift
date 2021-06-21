@@ -13,8 +13,9 @@ extension NSManagedObject {
    static func fetchedResultsController<T: NSManagedObject> (
       in context: NSManagedObjectContext = SceneDelegate.context,
       predicate: NSPredicate? = nil,
-      sorting: [NSSortDescriptor] = []) -> FetchedResultsController<T>
+      sorting: [NSSortDescriptor] = [],
+      sectionNameKeyPath: String? = nil) -> FetchedResultsController<T>
    {
-      FetchedResultsController<T>(context: context, predicate: predicate, sorting: sorting)
+      FetchedResultsController<T>(context: context, predicate: predicate, sorting: sorting, sectionNameKeyPath: sectionNameKeyPath)
    }
 }

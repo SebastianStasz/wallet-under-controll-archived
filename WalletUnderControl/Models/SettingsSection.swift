@@ -15,5 +15,6 @@ struct SettingsSection {
 struct SettingsOption {
    let title: String
    var value: String? = nil
+   var showIndicator = true
    let handler: () -> Void
 }

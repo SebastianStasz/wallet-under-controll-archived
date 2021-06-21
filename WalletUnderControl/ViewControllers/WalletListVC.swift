@@ -40,6 +40,14 @@ class WalletListVC: UIViewController {
       setupNavigation()
    }
    
+   override func viewWillAppear(_ animated: Bool) {
+      super.viewWillAppear(animated)
+      
+      navigationController?.navigationBar.tintColor = .label
+      navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.label]
+      navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.label]
+   }
+   
    private func setupNavigation() {
       let addWalletBTN = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showCreatingWalletSheet))
       
@@ -139,6 +147,10 @@ extension WalletListVC: UITableViewDelegate, UITableViewDataSource {
    
    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
       tableView.deselectRow(at: indexPath, animated: true)
+      let wallet = wallets.fetchedResultsController.object(at: indexPath) as! WalletEntity
+      let walletDetailVC = WalletDetailVC(wallet: wallet)
+      
+      navigationController?.pushViewController(walletDetailVC, animated: true)
    }
 }
 
