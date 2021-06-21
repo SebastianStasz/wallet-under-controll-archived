@@ -50,6 +50,19 @@ class CashFlowEntityTests: XCTestCase {
       XCTAssertEqual(cashFlow.value, updatedTemplate.value)
       XCTAssertEqual(cashFlow.category, updatedCategory)
    }
+
+    func test_delete_cash_flow_entity() throws {
+        let template = getSampleCashFlowTemplate(name: "Test", value: 25)
+        CashFlowEntity.create(in: context, using: template)
+        var cashFlow = fetchCashFlow().first
+        let wallet = cashFlow!.wallet
+
+        XCTAssertEqual(wallet.availableBalance, cashFlow!.value, "Before deleting wallet balance should be equal cash-flow value.")
+        cashFlow!.delete()
+        cashFlow = fetchCashFlow().first
+        XCTAssertNil(cashFlow, "After deletion cash-flow should not exist.")
+        XCTAssertEqual(wallet.availableBalance, 0, "After deletion wallet balance should be 0.")
+    }
    
    func test_create_cash_flow_entity_with_invalid_name() throws {
       let template = getSampleCashFlowTemplate(name: "  Te st Name  \n   ", value: 25)
@@ -144,7 +157,7 @@ extension CashFlowEntityTests {
    }
    
    private func getSampleCashFlowTemplate(name: String, value: Double) -> CashFlowTemplate {
-      let wallet = WalletEntity.createWallet(context: context)
+      let wallet = WalletEntity.createWallet(context: context, initialBalance: 0)
       let category = CashFlowCategoryEntity.createCashFlowCategory(type: .income, context: context)
       let template = CashFlowTemplate(name: name, date: Date(), value: value, wallet: wallet, category: category)
       

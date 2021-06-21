@@ -69,6 +69,11 @@ extension CashFlowEntity {
         cashFlow.category = template.category
         cashFlow.update(using: template)
     }
+
+    func delete() {
+        wallet.decreaseBalance(by: value)
+        managedObjectContext?.delete(self)
+    }
     
     func update(using template: CashFlowTemplate) {
         assert(template.category.type == self.category.type, "It should NOT be possible to change cash-flow type, e.g. 'expense' to 'income'.")

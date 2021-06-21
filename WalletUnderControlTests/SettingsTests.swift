@@ -30,13 +30,13 @@ class SettingsTests: XCTestCase {
       XCTAssertEqual(settings.secondaryCurrencyCode, "EUR", "Default vaule for secondary currency should be EUR")
       
       let usd = currencies.first(where: { $0.code == "USD" })!
-      settings.setCurrency(usd, for: .primary)
+    settings.setCurrency(usd, for: .primaryCurrency)
       
       XCTAssertEqual(settings.primaryCurrencyCode, "USD", "Primary currency should be now USD")
       XCTAssertEqual(settings.secondaryCurrencyCode, "EUR", "Secondary currency should be still EUR")
       
       let cad = currencies.first(where: { $0.code == "CAD" })!
-      settings.setCurrency(cad, for: .secondary)
+      settings.setCurrency(cad, for: .secondaryCurrency)
       
       XCTAssertEqual(settings.primaryCurrencyCode, "USD", "Primary currency should still USD")
       XCTAssertEqual(settings.secondaryCurrencyCode, "CAD", "Secondary currency should be now CAD")
@@ -47,7 +47,7 @@ class SettingsTests: XCTestCase {
       XCTAssertEqual(settings.secondaryCurrencyCode, "EUR", "Default vaule for secondary currency should be EUR")
       
       let eur = currencies.first(where: { $0.code == "EUR" })!
-      settings.setCurrency(eur, for: .primary)
+      settings.setCurrency(eur, for: .primaryCurrency)
       
       XCTAssertEqual(settings.primaryCurrencyCode, "EUR", "Primary currency should be now EUR")
       XCTAssertEqual(settings.secondaryCurrencyCode, "PLN", "Secondary currency should be now PLN (previous value of primary)")
@@ -58,7 +58,7 @@ class SettingsTests: XCTestCase {
       XCTAssertEqual(settings.secondaryCurrencyCode, "EUR", "Default vaule for secondary currency should be EUR")
       
       let pln = currencies.first(where: { $0.code == "PLN" })!
-      settings.setCurrency(pln, for: .secondary)
+      settings.setCurrency(pln, for: .secondaryCurrency)
       
       XCTAssertEqual(settings.secondaryCurrencyCode, "PLN", "Secondary currency should be now PLN")
       XCTAssertEqual(settings.primaryCurrencyCode, "EUR", "Primary currency should be now EUR (previous value of secondary)")

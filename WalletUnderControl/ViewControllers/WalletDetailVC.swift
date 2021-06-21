@@ -72,7 +72,13 @@ class WalletDetailVC: UIViewController {
 extension WalletDetailVC: UITableViewDelegate, UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        fetchedResultsController.sections?.count ?? 1
+        let numOfSections = fetchedResultsController.sections!.count
+        if numOfSections == 0 {
+            cashFlowTBV.setEmptyMessage("Oh, nothing here.")
+            return 0
+        }
+        cashFlowTBV.restore()
+        return numOfSections
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -123,10 +129,10 @@ extension WalletDetailVC: NSFetchedResultsControllerDelegate {
         func insertNewSection() {
             cashFlowTBV.insertSections([newIndexPath!.section], with: .automatic)
         }
-        func deleteSection() {
+        func deleteOldSection() {
             cashFlowTBV.deleteSections([indexPath!.section], with: .automatic)
         }
-        func inertNewRow() {
+        func insertNewRow() {
             cashFlowTBV.insertRows(at: [newIndexPath!], with: .automatic)
         }
         func deleteOldRow() {
@@ -136,15 +142,15 @@ extension WalletDetailVC: NSFetchedResultsControllerDelegate {
         func dateHasChanged() {
             let differenceInSectionsAfterUpdate = cashFlowTBV.numberOfSections - fetchedResultsController.sections!.count
             switch differenceInSectionsAfterUpdate {
-            // Moved to new section without deleting
+            // Move to new section without deleting old section.
             case _ where differenceInSectionsAfterUpdate < 0:
-                insertNewSection() ; deleteOldRow() ; inertNewRow()
+                insertNewSection() ; deleteOldRow() ; insertNewRow()
 
-            // Moved to existing section with deleting old
+            // Move to existing section with deleting old section.
             case _ where differenceInSectionsAfterUpdate > 0:
-                deleteSection() ; inertNewRow()
+                deleteOldSection() ; insertNewRow()
 
-            // Moved to new section with deleting old AND moved to existing section
+            // Move to new section with deleting old section OR move to existing section.
             default:
                 cashFlowTBV.reloadSections([indexPath!.section], with: .automatic)
                 cashFlowTBV.reloadSections([newIndexPath!.section], with: .automatic)
@@ -155,12 +161,12 @@ extension WalletDetailVC: NSFetchedResultsControllerDelegate {
         switch type {
         case .delete:
             let isLastElement = cashFlowTBV.numberOfRows(inSection: indexPath!.section) == 1
-            isLastElement ? deleteSection() : deleteOldRow()
+            isLastElement ? deleteOldSection() : deleteOldRow()
 
         case .insert:
-            inertNewRow()
             let isNewSection = cashFlowTBV.numberOfSections < fetchedResultsController.sections!.count
             if isNewSection { insertNewSection() }
+            insertNewRow()
 
         case .update:
             cashFlowTBV.reloadRows(at: [indexPath!], with: .automatic)

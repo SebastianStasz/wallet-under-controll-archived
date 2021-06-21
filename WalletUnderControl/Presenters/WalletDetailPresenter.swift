@@ -90,7 +90,7 @@ extension WalletDetailPresenter: WalletDetailPresenterProtocol {
         let message = "All data will be deleted!"
         
         let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        ac.addAction(UIAlertAction.deleteAction { [unowned self] in context.delete(cashFlow) })
+        ac.addAction(UIAlertAction.deleteAction { cashFlow.delete() })
         ac.addAction(UIAlertAction.cancel)
         
         view?.present(ac)
