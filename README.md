@@ -1,4 +1,4 @@
-# [Archived] WalletUnderControl
+# WalletUnderControl [Archived]
 
 ### Info
 
